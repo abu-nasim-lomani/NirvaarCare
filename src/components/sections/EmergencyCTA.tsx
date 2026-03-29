@@ -5,8 +5,9 @@ import { PhoneCall, ShieldAlert, Clock } from "lucide-react";
 import { emergencyCtaData } from "@/constants";
 import { useLang } from "@/context/LanguageContext";
 
-export default function EmergencyCTA() {
+export default function EmergencyCTA({ data }: { data?: any }) {
     const { lang } = useLang();
+    const content = data && Object.keys(data).length > 0 ? data : emergencyCtaData;
 
     return (
         <section id="contact" className="relative py-16 md:py-20 bg-emerald-50 dark:bg-emerald-900 overflow-hidden">
@@ -37,21 +38,21 @@ export default function EmergencyCTA() {
                     </div>
 
                     <h2 className="text-2xl sm:text-3xl font-bold text-emerald-900 dark:text-white mb-4 leading-tight">
-                        {lang === "en" ? emergencyCtaData.title.en : emergencyCtaData.title.bn}
+                        {lang === "en" ? content.title?.en : content.title?.bn}
                     </h2>
                     
                     <p className="text-emerald-700 dark:text-emerald-100/80 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
-                        {lang === "en" ? emergencyCtaData.description.en : emergencyCtaData.description.bn}
+                        {lang === "en" ? content.description?.en : content.description?.bn}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                         {/* Call Button */}
                         <a 
-                            href={`tel:${emergencyCtaData.phone}`}
+                            href={`tel:${content.phone || emergencyCtaData.phone}`}
                             className="group relative inline-flex items-center justify-center gap-2.5 bg-red-500 hover:bg-red-600 text-white px-7 sm:px-9 py-3.5 rounded-full font-bold text-sm sm:text-base transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.4)] overflow-hidden"
                         >
                             <PhoneCall size={18} className="animate-pulse" />
-                            <span>{lang === "en" ? emergencyCtaData.buttonText.en : emergencyCtaData.buttonText.bn}</span>
+                            <span>{lang === "en" ? content.buttonText?.en : content.buttonText?.bn}</span>
                         </a>
 
                         {/* Status Indicator */}

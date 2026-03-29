@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SiteConfigProvider } from "@/context/SiteConfigContext";
 
 import { Hind_Siliguri } from "next/font/google";
 
@@ -32,11 +31,9 @@ export default function RootLayout({
       <body className={`${hindSiliguri.className} min-h-full flex flex-col font-sans`}>
         <ThemeProvider>
           <LanguageProvider>
-            <Navbar />
-            <main className="flex-grow">
+            <SiteConfigProvider>
               {children}
-            </main>
-            <Footer />
+            </SiteConfigProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

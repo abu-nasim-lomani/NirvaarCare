@@ -13,8 +13,9 @@ const iconMap: Record<string, React.FC<any>> = {
     HeartHandshake,
 };
 
-export default function HowItWorks() {
+export default function HowItWorks({ data }: { data?: any }) {
     const { lang } = useLang();
+    const content = data && Object.keys(data).length > 0 ? data : processData;
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -49,10 +50,10 @@ export default function HowItWorks() {
                     className="text-center max-w-3xl mx-auto mb-20"
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold text-sm mb-6 border border-emerald-200 dark:border-emerald-800">
-                        {lang === "en" ? processData.badge.en : processData.badge.bn}
+                        {lang === "en" ? content.badge?.en : content.badge?.bn}
                     </div>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white leading-[1.2]">
-                        {lang === "en" ? processData.title.en : processData.title.bn}
+                        {lang === "en" ? content.title?.en : content.title?.bn}
                     </h2>
                 </motion.div>
 
@@ -76,8 +77,8 @@ export default function HowItWorks() {
                         ></motion.div>
                     </div>
 
-                    {processData.steps.map((step, idx) => {
-                        const IconComponent = iconMap[step.icon];
+                    {content.steps?.map((step: any, idx: number) => {
+                        const IconComponent = iconMap[step.icon] || PhoneCall;
                         
                         return (
                             <motion.div 
@@ -86,7 +87,7 @@ export default function HowItWorks() {
                                 className="relative z-10 flex flex-col items-center text-center group"
                             >
                                 {/* Connector line for Mobile/Tablet */}
-                                {idx !== processData.steps.length - 1 && (
+                                {idx !== content.steps?.length - 1 && (
                                     <div className="lg:hidden absolute top-[88px] bottom-[-32px] left-1/2 w-[2px] bg-gradient-to-b from-emerald-500/50 to-transparent -translate-x-1/2 z-[-1]"></div>
                                 )}
 

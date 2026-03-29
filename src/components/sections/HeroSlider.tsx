@@ -52,7 +52,15 @@ const kenBurnsClasses = [
     "animate-ken-burns-2",
 ];
 
-export default function HeroSlider() {
+export default function HeroSlider({ 
+    data, 
+    isEditorMode = false, 
+    forceSlideIdx 
+}: { 
+    data?: any; 
+    isEditorMode?: boolean; 
+    forceSlideIdx?: number; 
+}) {
     const { lang }          = useLang();
     const prefersReduced    = useReducedMotion();
     const [activeIndex, setActiveIndex]     = useState(0);
@@ -62,9 +70,16 @@ export default function HeroSlider() {
     const rafRef    = useRef<number | null>(null);
     const startRef  = useRef<number | null>(null);
 
+    // ── Editor sync ─────────────────────────────────────────────────────────
+    useEffect(() => {
+        if (isEditorMode && typeof forceSlideIdx === "number" && swiperRef.current) {
+            swiperRef.current.slideTo(forceSlideIdx, 300);
+        }
+    }, [isEditorMode, forceSlideIdx]);
+
     // ── Progress bar animation ──────────────────────────────────────────────
     useEffect(() => {
-        if (prefersReduced || isPaused) return;
+        if (prefersReduced || isPaused || isEditorMode) return;
 
         setProgress(0);
         startRef.current = performance.now();
@@ -105,15 +120,15 @@ export default function HeroSlider() {
                 modules={[Autoplay, EffectFade]}
                 effect="fade"
                 fadeEffect={{ crossFade: true }}
-                autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
-                speed={1200}
-                loop
+                autoplay={!isEditorMode ? { delay: AUTOPLAY_DELAY, disableOnInteraction: false } : false}
+                speed={!isEditorMode ? 1200 : 300}
+                loop={!isEditorMode}
                 onSwiper={(sw) => { swiperRef.current = sw; }}
                 onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
                 className="w-full h-full" style={{ height: "100dvh" }}
             >
-                {heroSlides.map((slide, idx) => (
-                    <SwiperSlide key={slide.id}>
+                {(data?.slides?.length > 0 ? data.slides : heroSlides).map((slide: any, idx: number) => (
+                    <SwiperSlide key={slide.id || idx}>
 
                         {/* ── Background: real image + gradient fallback ── */}
                         <div className="absolute inset-0 overflow-hidden">
@@ -121,15 +136,18 @@ export default function HeroSlider() {
                             <div className={`absolute inset-0 ${bgColours[idx % bgColours.length]}`} />
                             {/* Real image — gracefully hidden if file missing */}
                             <Image
+                                key={slide.imageBg}
                                 src={slide.imageBg}
                                 alt={`${lang === "en" ? slide.badge.en : slide.badge.bn} background`}
                                 fill
                                 priority={idx === 0}
                                 sizes="100vw"
+                                unoptimized={true}
                                 className={`object-cover object-center ${
                                     !prefersReduced ? kenBurnsClasses[idx % kenBurnsClasses.length] : ""
                                 }`}
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                                onLoad={(e) => { (e.target as HTMLImageElement).style.display = "block"; }}
                             />
                         </div>
 
@@ -164,10 +182,10 @@ export default function HeroSlider() {
                                                 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-snug mb-3"
                                             >
                                                 {(lang === "en" ? slide.headline.en : slide.headline.bn)
-                                                    .split("\n")
-                                                    .map((line, li) => (
+                                                    ?.split("\n")
+                                                    .map((line: string, li: number) => (
                                                         <span key={li} className="block">
-                                                            {line.split(" ").map((word, wi) => (
+                                                            {line.split(" ").map((word: string, wi: number) => (
                                                                 <motion.span
                                                                     key={wi}
                                                                     variants={prefersReduced ? undefined : {
@@ -193,12 +211,14 @@ export default function HeroSlider() {
                                             </motion.p>
 
                                             {/* Trust badge */}
-                                            <motion.p
-                                                variants={prefersReduced ? undefined : itemVariants}
-                                                className="text-white/55 text-[11px] sm:text-xs mb-5 font-medium"
-                                            >
-                                                {lang === "en" ? slide.trust.en : slide.trust.bn}
-                                            </motion.p>
+                                            {slide.trust?.en?.trim() && (
+                                                <motion.p
+                                                    variants={prefersReduced ? undefined : itemVariants}
+                                                    className="text-white/55 text-[11px] sm:text-xs mb-5 font-medium"
+                                                >
+                                                    {lang === "en" ? slide.trust.en : slide.trust.bn}
+                                                </motion.p>
+                                            )}
 
                                             {/* CTA Buttons */}
                                             <motion.div
@@ -206,28 +226,32 @@ export default function HeroSlider() {
                                                 className="flex flex-wrap gap-3 sm:gap-4"
                                             >
                                                 {/* Primary */}
-                                                <Link href={slide.primaryCTA.href}>
-                                                    <motion.span
-                                                        whileHover={{ scale: 1.04 }}
-                                                        whileTap={{ scale: 0.97 }}
-                                                        className="group inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-5 py-2.5 rounded-full shadow-xl shadow-emerald-900/40 transition-colors duration-300 cursor-pointer text-sm"
-                                                    >
-                                                        {lang === "en" ? slide.primaryCTA.en : slide.primaryCTA.bn}
-                                                        <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                                                    </motion.span>
-                                                </Link>
+                                                {slide.primaryCTA?.en?.trim() && (
+                                                    <Link href={slide.primaryCTA.href || "#"}>
+                                                        <motion.span
+                                                            whileHover={{ scale: 1.04 }}
+                                                            whileTap={{ scale: 0.97 }}
+                                                            className="group inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-5 py-2.5 rounded-full shadow-xl shadow-emerald-900/40 transition-colors duration-300 cursor-pointer text-sm"
+                                                        >
+                                                            {lang === "en" ? slide.primaryCTA.en : slide.primaryCTA.bn}
+                                                            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                                                        </motion.span>
+                                                    </Link>
+                                                )}
 
-                                                {/* Secondary — hidden on xs, shown sm+ */}
-                                                <Link href={slide.secondaryCTA.href} className="hidden sm:block">
-                                                    <motion.span
-                                                        whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.15)" }}
-                                                        whileTap={{ scale: 0.97 }}
-                                                        className="group inline-flex items-center gap-2 border border-white/40 bg-white/10 backdrop-blur-sm text-white font-semibold px-5 py-2.5 rounded-full transition-all duration-300 cursor-pointer text-sm"
-                                                    >
-                                                        {lang === "en" ? slide.secondaryCTA.en : slide.secondaryCTA.bn}
-                                                        <ChevronRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                                                    </motion.span>
-                                                </Link>
+                                                {/* Secondary */}
+                                                {slide.secondaryCTA?.en?.trim() && (
+                                                    <Link href={slide.secondaryCTA.href || "#"} className="hidden sm:block">
+                                                        <motion.span
+                                                            whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.15)" }}
+                                                            whileTap={{ scale: 0.97 }}
+                                                            className="group inline-flex items-center gap-2 border border-white/40 bg-white/10 backdrop-blur-sm text-white font-semibold px-5 py-2.5 rounded-full transition-all duration-300 cursor-pointer text-sm"
+                                                        >
+                                                            {lang === "en" ? slide.secondaryCTA.en : slide.secondaryCTA.bn}
+                                                            <ChevronRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                                                        </motion.span>
+                                                    </Link>
+                                                )}
                                             </motion.div>
                                         </motion.div>
                                     )}
@@ -244,9 +268,9 @@ export default function HeroSlider() {
 
                     {/* Slide selector with progress bars */}
                     <div className="flex items-center gap-3">
-                        {heroSlides.map((slide, idx) => (
+                        {(data?.slides?.length > 0 ? data.slides : heroSlides).map((slide: any, idx: number) => (
                             <button
-                                key={slide.id}
+                                key={slide.id || idx}
                                 onClick={() => swiperRef.current?.slideTo(idx)}
                                 aria-label={`Go to slide ${idx + 1}`}
                                 className="group flex flex-col items-start gap-1.5 cursor-pointer"

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Activity, Stethoscope, Pill, Ambulance, ShoppingBag, HeartHandshake, ArrowRight } from "lucide-react";
 import { servicesData } from "@/constants";
 import { useLang } from "@/context/LanguageContext";
+import Link from "next/link";
 
 // Map string keys from data to actual Lucide components
 const iconMap: Record<string, React.FC<any>> = {
@@ -15,8 +16,9 @@ const iconMap: Record<string, React.FC<any>> = {
     HeartHandshake,
 };
 
-export default function ServicesGrid() {
+export default function ServicesGrid({ data }: { data?: any }) {
     const { lang } = useLang();
+    const content = data && Object.keys(data).length > 0 ? data : servicesData;
 
     // Container variants for staggered animation
     const containerVariants = {
@@ -50,10 +52,10 @@ export default function ServicesGrid() {
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold text-sm mb-6 border border-emerald-200 dark:border-emerald-800">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        {lang === "en" ? servicesData.badge.en : servicesData.badge.bn}
+                        {lang === "en" ? content.badge?.en : content.badge?.bn}
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-[1.2]">
-                        {lang === "en" ? servicesData.title.en : servicesData.title.bn}
+                        {lang === "en" ? content.title?.en : content.title?.bn}
                     </h2>
                 </motion.div>
 
@@ -65,8 +67,8 @@ export default function ServicesGrid() {
                     viewport={{ once: true, margin: "-50px" }}
                     className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
                 >
-                    {servicesData.items.map((service) => {
-                        const IconComponent = iconMap[service.icon];
+                    {content.items?.map((service: any) => {
+                        const IconComponent = iconMap[service.icon] || Activity;
                         
                         return (
                             <motion.div 
@@ -84,6 +86,8 @@ export default function ServicesGrid() {
                                 {/* Dynamic Hover Gradient Border Fill */}
                                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-50/50 dark:from-emerald-950/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                                 
+                                <Link href={`/services/${service.id}`} className="absolute inset-0 w-full h-full z-20" aria-label={`View details of ${service.title?.en || "Service"}`}></Link>
+
                                 {/* Content Inside */}
                                 <div className="relative p-5 sm:p-6 flex flex-col h-full z-10 text-gray-900 dark:text-white">
                                     {/* Top: Icon */}

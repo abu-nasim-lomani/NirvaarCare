@@ -4,15 +4,20 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, PhoneCall, Heart, Sun, Moon, Globe } from "lucide-react";
 import Link from "next/link";
-import { navLinks } from "@/constants";
 import { useLang } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
-export default function Navbar() {
+export default function Navbar({ data, isPreview = false }: { data?: any, isPreview?: boolean }) {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const { lang, toggleLang } = useLang();
     const { isDark, toggleTheme } = useTheme();
+    const { sections, isLoading } = useSiteConfig();
+    const navItems = sections.filter(s => s.is_visible && s.show_in_nav);
+
+    const navbarSection = sections.find(s => s.component_id === "Navbar");
+    const content = data || navbarSection?.content_data || {};
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -26,10 +31,10 @@ export default function Navbar() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className={`fixed w-full z-50 top-0 transition-all duration-500 ${
-                scrolled
+            className={`${isPreview ? "relative !bg-gray-900 border-none rounded-2xl overflow-hidden mt-4" : "fixed"} w-full z-50 top-0 transition-all duration-500 ${
+                scrolled && !isPreview
                     ? "bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-lg border-b border-gray-100 dark:border-gray-800"
-                    : "bg-transparent border-b border-transparent"
+                    : (isPreview ? "" : "bg-transparent border-b border-transparent")
             }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,14 +42,18 @@ export default function Navbar() {
 
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0 flex items-center gap-2 group cursor-pointer">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md group-hover:shadow-emerald-400/40 transition-shadow duration-300">
-                            <Heart size={18} className="text-white" fill="white" />
-                        </div>
+                        {content.logoUrl ? (
+                            <img src={content.logoUrl} alt="NirvaarCare Logo" className="h-10 w-auto object-contain drop-shadow-sm" />
+                        ) : (
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md group-hover:shadow-emerald-400/40 transition-shadow duration-300">
+                                <Heart size={18} className="text-white" fill="white" />
+                            </div>
+                        )}
                         <span className="text-2xl font-bold tracking-tight">
-                            <span className={scrolled ? "text-emerald-700 dark:text-emerald-400" : "text-emerald-300"}>
+                            <span className={scrolled && !isPreview ? "text-emerald-700 dark:text-emerald-400" : (isPreview ? "text-emerald-400" : "text-emerald-300")}>
                                 {lang === "en" ? "Nirvaar" : "নির্ভার"}
                             </span>
-                            <span className={scrolled ? "text-gray-800 dark:text-gray-100" : "text-white"}>
+                            <span className={scrolled && !isPreview ? "text-gray-800 dark:text-gray-100" : "text-white"}>
                                 {lang === "en" ? " Care" : " কেয়ার"}
                             </span>
                         </span>
@@ -52,14 +61,14 @@ export default function Navbar() {
 
                     {/* Desktop Nav Links */}
                     <div className="hidden xl:flex items-center gap-1">
-                        {navLinks.map((link, index) => (
-                            <Link key={index} href={link.href}>
+                        {!isLoading && navItems.map((link) => (
+                            <Link key={link.id} href={link.nav_href}>
                                 <span className={`relative px-3.5 py-2 font-medium text-sm transition-colors duration-300 group rounded-lg block whitespace-nowrap ${
                                     scrolled
                                         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/20"
                                         : "text-white/90 hover:text-white hover:bg-white/10"
                                 }`}>
-                                    {lang === "en" ? link.nameEn : link.name}
+                                    {lang === "en" ? link.nav_label_en : link.nav_label_bn}
                                     <span className="absolute bottom-1 left-3.5 right-3.5 h-0.5 bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
                                 </span>
                             </Link>
@@ -137,13 +146,13 @@ export default function Navbar() {
 
                         {/* CTA */}
                         <motion.a
-                            href="tel:+8801700000000"
+                            href={content.emergencyUrl || "tel:+8801700000000"}
                             whileHover={{ scale: 1.04 }}
                             whileTap={{ scale: 0.96 }}
                             className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-lg shadow-emerald-600/25 hover:shadow-emerald-500/40 transition-all duration-300 ml-1"
                         >
                             <PhoneCall size={16} />
-                            <span>{lang === "en" ? "Emergency" : "জরুরি সেবা"}</span>
+                            <span>{lang === "en" ? (content.emergencyText?.en || "Emergency") : (content.emergencyText?.bn || "জরুরি সেবা")}</span>
                         </motion.a>
                     </div>
 
@@ -211,8 +220,8 @@ export default function Navbar() {
                         className="md:hidden bg-white dark:bg-gray-950 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 overflow-hidden"
                     >
                         <div className="px-4 pt-3 pb-6 space-y-1">
-                            {navLinks.map((link, index) => (
-                                <Link key={index} href={link.href}>
+                            {!isLoading && navItems.map((link, index) => (
+                                <Link key={link.id} href={link.nav_href}>
                                     <motion.span
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -220,18 +229,18 @@ export default function Navbar() {
                                         onClick={() => setIsOpen(false)}
                                         className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 rounded-xl transition-all duration-200 cursor-pointer"
                                     >
-                                        {lang === "en" ? link.nameEn : link.name}
+                                        {lang === "en" ? link.nav_label_en : link.nav_label_bn}
                                     </motion.span>
                                 </Link>
                             ))}
                             <div className="pt-3">
                                 <motion.a
-                                    href="tel:+8801700000000"
+                                    href={content.emergencyUrl || "tel:+8801700000000"}
                                     whileTap={{ scale: 0.97 }}
                                     className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-emerald-600/20"
                                 >
                                     <PhoneCall size={17} />
-                                    <span>{lang === "en" ? "Emergency Hotline" : "জরুরি সেবা (হটলাইন)"}</span>
+                                    <span>{lang === "en" ? (content.emergencyTextMobile?.en || "Emergency Hotline") : (content.emergencyTextMobile?.bn || "জরুরি সেবা (হটলাইন)")}</span>
                                 </motion.a>
                             </div>
                         </div>

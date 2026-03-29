@@ -33,8 +33,9 @@ const itemVariants = {
     },
 };
 
-export default function TrustBanner() {
+export default function TrustBanner({ data }: { data?: any }) {
     const { lang } = useLang();
+    const items = data && Array.isArray(data) && data.length > 0 ? data : trustBannerData;
 
     return (
         <section 
@@ -46,16 +47,15 @@ export default function TrustBanner() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 lg:gap-12 max-w-5xl mx-auto"
+                    className="flex flex-col md:flex-row justify-center items-start gap-6 md:gap-4 lg:gap-8 max-w-7xl mx-auto px-4"
                 >
-                    {trustBannerData.map((item) => {
-                        const IconComponent = iconMap[item.icon];
+                    {items.map((item: any) => {
+                        const IconComponent = iconMap[item.icon] || Heart;
                         return (
                             <motion.div 
                                 key={item.id} 
                                 variants={itemVariants}
-                                className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-3 sm:gap-4 group"
+                                className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-3 group flex-1 min-w-0 w-full p-2 lg:p-4 rounded-xl hover:bg-white/50 dark:hover:bg-emerald-900/10 transition-colors"
                             >
                                 {/* Icon wrapper */}
                                 <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-white dark:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800 shadow-sm flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white dark:group-hover:bg-emerald-500 transition-all duration-300">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowRight, HeartPulse } from "lucide-react";
 import { footerData } from "@/constants";
 import { useLang } from "@/context/LanguageContext";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 // Custom SVG Icons for Brands
 const FacebookIcon = ({ size = 24 }: { size?: number }) => (
@@ -20,8 +21,14 @@ const LinkedinIcon = ({ size = 24 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
 );
 
-export default function Footer() {
+export default function Footer({ data }: { data?: any }) {
     const { lang } = useLang();
+    const { sections } = useSiteConfig();
+    
+    // Auto pickup footer custom data globally even if not passed explicitly 
+    const footerSection = sections?.find(s => s.component_id === "Footer");
+    const activeData = data || footerSection?.content_data;
+    const content = activeData && Object.keys(activeData).length > 0 ? activeData : footerData;
 
     // Map string keys from data to actual Lucide components
     const iconMap: Record<string, React.FC<any>> = {
@@ -50,9 +57,13 @@ export default function Footer() {
                         className="space-y-6"
                     >
                         <Link href="/" className="inline-flex items-center gap-2 group">
-                            <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)] group-hover:scale-110 transition-transform duration-300">
-                                <HeartPulse size={28} strokeWidth={2.5} />
-                            </div>
+                            {content.logoUrl ? (
+                                <img src={content.logoUrl} alt="NirvaarCare Logo" className="h-10 w-auto object-contain drop-shadow-sm" />
+                            ) : (
+                                <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)] group-hover:scale-110 transition-transform duration-300">
+                                    <HeartPulse size={28} strokeWidth={2.5} />
+                                </div>
+                            )}
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 tracking-tight">
                                 Nirvaar
                                 <span className="font-light text-gray-800 dark:text-slate-100">Care</span>
@@ -60,7 +71,7 @@ export default function Footer() {
                         </Link>
                         
                         <p className="text-gray-500 dark:text-slate-400 leading-relaxed text-xs sm:text-sm pr-4">
-                            {lang === "en" ? footerData.brandDesc.en : footerData.brandDesc.bn}
+                            {lang === "en" ? content.brandDesc?.en : content.brandDesc?.bn}
                         </p>
 
                         <div className="flex items-center gap-4">
@@ -84,10 +95,10 @@ export default function Footer() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
                         <h3 className="text-gray-900 dark:text-white font-semibold text-sm mb-5">
-                            {lang === "en" ? footerData.quickLinks.title.en : footerData.quickLinks.title.bn}
+                            {lang === "en" ? content.quickLinks?.title?.en : content.quickLinks?.title?.bn}
                         </h3>
                         <ul className="space-y-3">
-                            {footerData.quickLinks.links.map((link, idx) => (
+                            {content.quickLinks?.links?.map((link: any, idx: number) => (
                                 <li key={idx}>
                                     <Link 
                                         href={link.href}
@@ -109,10 +120,10 @@ export default function Footer() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <h3 className="text-gray-900 dark:text-white font-semibold text-sm mb-5">
-                            {lang === "en" ? footerData.contactInfo.title.en : footerData.contactInfo.title.bn}
+                            {lang === "en" ? content.contactInfo?.title?.en : content.contactInfo?.title?.bn}
                         </h3>
                         <ul className="space-y-5">
-                            {footerData.contactInfo.items.map((item, idx) => {
+                            {content.contactInfo?.items?.map((item: any, idx: number) => {
                                 const Icon = iconMap[item.icon];
                                 const text = typeof item.text === 'object' 
                                     ? (lang === "en" ? item.text.en : item.text.bn) 
@@ -168,7 +179,7 @@ export default function Footer() {
                     transition={{ duration: 0.5, delay: 0.5 }}
                     className="pt-8 border-t border-gray-200 dark:border-slate-800/80 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 dark:text-slate-500 text-sm"
                 >
-                    <p>{lang === "en" ? footerData.copyright.en : footerData.copyright.bn}</p>
+                    <p>{lang === "en" ? content.copyright?.en : content.copyright?.bn}</p>
                     <div className="flex gap-6">
                         <Link href="#" className="hover:text-emerald-400 transition-colors">{lang === "en" ? "Privacy Policy" : "প্রাইভেসি পলিসি"}</Link>
                         <Link href="#" className="hover:text-emerald-400 transition-colors">{lang === "en" ? "Terms of Service" : "শর্তাবলী"}</Link>

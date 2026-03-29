@@ -6,8 +6,9 @@ import { Star, Quote } from "lucide-react";
 import { testimonialData } from "@/constants";
 import { useLang } from "@/context/LanguageContext";
 
-export default function Testimonials() {
+export default function Testimonials({ data }: { data?: any }) {
     const { lang } = useLang();
+    const content = data && Object.keys(data).length > 0 ? data : testimonialData;
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -45,10 +46,10 @@ export default function Testimonials() {
                     className="text-center max-w-2xl mx-auto mb-16 lg:mb-20"
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold text-sm mb-6 border border-emerald-200 dark:border-emerald-800">
-                        {lang === "en" ? testimonialData.badge.en : testimonialData.badge.bn}
+                        {lang === "en" ? content.badge?.en : content.badge?.bn}
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-[1.2]">
-                        {lang === "en" ? testimonialData.title.en : testimonialData.title.bn}
+                        {lang === "en" ? content.title?.en : content.title?.bn}
                     </h2>
                 </motion.div>
 
@@ -60,7 +61,7 @@ export default function Testimonials() {
                     viewport={{ once: true, margin: "-50px" }}
                     className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
                 >
-                    {testimonialData.items.map((testimonial) => (
+                    {content.items?.map((testimonial: any) => (
                         <motion.div 
                             key={testimonial.id}
                             variants={cardVariants}
@@ -87,9 +88,11 @@ export default function Testimonials() {
                             <div className="flex items-center gap-4 mt-auto border-t border-gray-200 dark:border-gray-800 pt-6 relative z-10">
                                 <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-100 dark:border-emerald-900/50 shadow-md">
                                     <Image
+                                        key={testimonial.image}
                                         src={testimonial.image}
-                                        alt={lang === "en" ? testimonial.name.en : testimonial.name.bn}
+                                        alt={lang === "en" ? testimonial.name?.en : testimonial.name?.bn}
                                         fill
+                                        unoptimized={true}
                                         className="object-cover"
                                         sizes="56px"
                                     />
