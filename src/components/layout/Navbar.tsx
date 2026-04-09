@@ -2,15 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, PhoneCall, Heart, Sun, Moon, Globe } from "lucide-react";
+import { Menu, X, PhoneCall, Heart, Sun, Moon, Globe, User, LogOut, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useSiteConfig } from "@/context/SiteConfigContext";
+import { createClient } from "@/lib/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+import AuthModal from "@/components/auth/AuthModal";
 
 export default function Navbar({ data, isPreview = false }: { data?: any, isPreview?: boolean }) {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [user, setUser] = useState<SupabaseUser | null>(null);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [authModalOpen, setAuthModalOpen] = useState(false);
     const { lang, toggleLang } = useLang();
     const { isDark, toggleTheme } = useTheme();
     const { sections, isLoading } = useSiteConfig();
@@ -25,8 +31,39 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Auth state listener
+    useEffect(() => {
+        if (isPreview) return;
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data }) => setUser(data.user));
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+        return () => subscription.unsubscribe();
+    }, [isPreview]);
+
+    const handleLogout = async () => {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        setUser(null);
+        setUserMenuOpen(false);
+    };
+
+    // Get display name from user metadata
+    const displayName = user?.user_metadata?.full_name
+        || user?.user_metadata?.name  // Google users
+        || user?.email?.split("@")[0] // fallback
+        || "User";
+
+    // Get initials for the avatar circle
+    const initials = displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
+
+    const iconBtnClass = (scrolled: boolean) => scrolled
+        ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800"
+        : "text-white/80 hover:text-white hover:bg-white/15 hover:border-white/20";
 
     return (
+        <>
         <motion.nav
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -84,34 +121,16 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleLang}
                             title={lang === "en" ? "Switch to Bangla" : "Switch to English"}
-                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent relative ${
-                                scrolled
-                                    ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800"
-                                    : "text-white/80 hover:text-white hover:bg-white/15 hover:border-white/20"
-                            }`}
+                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent relative ${iconBtnClass(scrolled && !isPreview)}`}
                         >
                             <AnimatePresence mode="wait">
                                 {lang === "en" ? (
-                                    <motion.span
-                                        key="globe-en"
-                                        initial={{ rotate: -90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: 90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="flex flex-col items-center leading-none"
-                                    >
+                                    <motion.span key="globe-en" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }} className="flex flex-col items-center leading-none">
                                         <Globe size={15} />
                                         <span className="text-[8px] font-bold mt-0.5 tracking-wide">EN</span>
                                     </motion.span>
                                 ) : (
-                                    <motion.span
-                                        key="globe-bn"
-                                        initial={{ rotate: 90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: -90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="flex flex-col items-center leading-none"
-                                    >
+                                    <motion.span key="globe-bn" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }} className="flex flex-col items-center leading-none">
                                         <Globe size={15} />
                                         <span className="text-[8px] font-bold mt-0.5 tracking-wide">বাং</span>
                                     </motion.span>
@@ -125,11 +144,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleTheme}
                             title={lang === "en" ? "Toggle theme" : "থিম পরিবর্তন"}
-                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent ${
-                                scrolled
-                                    ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800"
-                                    : "text-white/80 hover:text-white hover:bg-white/15 hover:border-white/20"
-                            }`}
+                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent ${iconBtnClass(scrolled && !isPreview)}`}
                         >
                             <AnimatePresence mode="wait">
                                 {isDark ? (
@@ -144,16 +159,72 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             </AnimatePresence>
                         </motion.button>
 
-                        {/* CTA */}
-                        <motion.a
-                            href={content.emergencyUrl || "tel:+8801700000000"}
-                            whileHover={{ scale: 1.04 }}
-                            whileTap={{ scale: 0.96 }}
-                            className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-lg shadow-emerald-600/25 hover:shadow-emerald-500/40 transition-all duration-300 ml-1"
-                        >
-                            <PhoneCall size={16} />
-                            <span>{lang === "en" ? (content.emergencyText?.en || "Emergency") : (content.emergencyText?.bn || "জরুরি সেবা")}</span>
-                        </motion.a>
+                        {/* User Auth Section */}
+                        {!isPreview && (
+                            user ? (
+                                // Logged-in: Avatar + Dropdown
+                                <div className="relative">
+                                    <motion.button
+                                        whileHover={{ scale: 1.04 }}
+                                        whileTap={{ scale: 0.96 }}
+                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                        className={`flex items-center gap-2 px-3 py-2 rounded-full font-medium text-sm transition-all duration-200 border ml-1 ${
+                                            scrolled
+                                                ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
+                                                : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                                        }`}
+                                    >
+                                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                                            {initials}
+                                        </div>
+                                        <span className="max-w-[100px] truncate">{displayName}</span>
+                                        <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? "rotate-180" : ""}`} />
+                                    </motion.button>
+
+                                    {/* Dropdown Menu */}
+                                    <AnimatePresence>
+                                        {userMenuOpen && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                                                transition={{ duration: 0.15 }}
+                                                className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50"
+                                            >
+                                                <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                                                    <p className="text-xs text-gray-500">Signed in as</p>
+                                                    <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{displayName}</p>
+                                                </div>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                                >
+                                                    <LogOut size={16} />
+                                                    {lang === "en" ? "Sign Out" : "লগ আউট"}
+                                                </button>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ) : (
+                                // Not logged in: Login button only
+                                <motion.button
+                                    whileHover={{ scale: 1.04 }}
+                                    whileTap={{ scale: 0.96 }}
+                                    onClick={() => setAuthModalOpen(true)}
+                                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 border ml-1 ${
+                                        scrolled
+                                            ? "border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                                            : "border-white/30 text-white hover:bg-white/10"
+                                    }`}
+                                >
+                                    <User size={15} />
+                                    {lang === "en" ? "Login" : "লগিন"}
+                                </motion.button>
+                            )
+                        )}
+
+
                     </div>
 
                     {/* Mobile hamburger (shown below xl) */}
@@ -194,6 +265,13 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             {isDark ? <Sun size={18} /> : <Moon size={18} />}
                         </motion.button>
 
+                        {/* Mobile user avatar */}
+                        {!isPreview && user && (
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold shadow">
+                                {initials}
+                            </div>
+                        )}
+
                         <motion.button
                             whileTap={{ scale: 0.92 }}
                             onClick={() => setIsOpen(!isOpen)}
@@ -233,20 +311,62 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                     </motion.span>
                                 </Link>
                             ))}
-                            <div className="pt-3">
-                                <motion.a
-                                    href={content.emergencyUrl || "tel:+8801700000000"}
-                                    whileTap={{ scale: 0.97 }}
-                                    className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-emerald-600/20"
-                                >
-                                    <PhoneCall size={17} />
-                                    <span>{lang === "en" ? (content.emergencyTextMobile?.en || "Emergency Hotline") : (content.emergencyTextMobile?.bn || "জরুরি সেবা (হটলাইন)")}</span>
-                                </motion.a>
-                            </div>
+
+                            {/* Mobile auth section */}
+                            {!isPreview && (
+                                <div className="pt-3 space-y-2">
+                                    {user ? (
+                                        <>
+                                            <div className="flex items-center gap-3 px-4 py-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+                                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-sm font-bold">
+                                                    {initials}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{displayName}</p>
+                                                    <p className="text-xs text-gray-500">Logged in</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => { handleLogout(); setIsOpen(false); }}
+                                                className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                                            >
+                                                <LogOut size={16} />
+                                                {lang === "en" ? "Sign Out" : "লগ আউট"}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={() => { setAuthModalOpen(true); setIsOpen(false); }}
+                                                className="w-full flex justify-center items-center gap-2 border border-emerald-400 text-emerald-600 dark:text-emerald-400 px-6 py-3 rounded-full font-semibold transition hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                                            >
+                                                <User size={17} />
+                                                {lang === "en" ? "Login / Register" : "লগিন / নিবন্ধন"}
+                                            </button>
+                                            <motion.a
+                                                href={content.emergencyUrl || "tel:+8801700000000"}
+                                                whileTap={{ scale: 0.97 }}
+                                                className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-emerald-600/20"
+                                            >
+                                                <PhoneCall size={17} />
+                                                <span>{lang === "en" ? (content.emergencyTextMobile?.en || "Emergency Hotline") : (content.emergencyTextMobile?.bn || "জরুরি সেবা (হটলাইন)")}</span>
+                                            </motion.a>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
         </motion.nav>
+
+        {/* Global Auth Modal */}
+        <AuthModal
+            isOpen={authModalOpen}
+            onClose={() => setAuthModalOpen(false)}
+            onSuccess={() => setAuthModalOpen(false)}
+        />
+        </>
     );
 }
