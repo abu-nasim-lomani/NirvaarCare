@@ -101,7 +101,7 @@ export default function ServicesGrid({ data }: { data?: any }) {
                                             {lang === "en" ? service.title.en : service.title.bn}
                                         </h3>
                                         
-                                        <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm leading-snug group-hover:text-gray-800 dark:group-hover:text-slate-200 transition-colors duration-300">
+                                        <p className="line-clamp-3 text-gray-600 dark:text-slate-400 text-xs sm:text-sm leading-snug group-hover:text-gray-800 dark:group-hover:text-slate-200 transition-colors duration-300">
                                             {lang === "en" ? service.description.en : service.description.bn}
                                         </p>
 

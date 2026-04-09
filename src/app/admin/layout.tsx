@@ -72,6 +72,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                         <Settings2 size={20} />
                         Customize Homepage
                     </Link>
+                    <Link href="/admin/services" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium ml-4 border-l-2 border-emerald-100 dark:border-emerald-900">
+                        <LayoutDashboard size={16} />
+                        Service Details Page
+                    </Link>
                     <Link href="/admin/bookings" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium">
                         <Inbox size={20} />
                         Service Bookings
