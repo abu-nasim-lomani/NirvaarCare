@@ -146,52 +146,81 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                 <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl animate-pulse pointer-events-none z-0" />
                 <div className="absolute bottom-1/3 left-1/3 w-64 h-64 rounded-full bg-teal-500/10 blur-3xl animate-pulse pointer-events-none z-0" style={{ animationDelay: "1.5s" }} />
 
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, ease: "easeOut" }}
-                        className="max-w-4xl"
-                    >
-                        {/* Service name */}
-                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
-                            {lang === "en" ? service.title.en : service.title.bn}
-                        </h1>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+                    <div className={`grid grid-cols-1 ${hasVideo ? 'lg:grid-cols-2' : ''} gap-12 lg:gap-16 items-center`}>
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
+                            className="max-w-2xl"
+                        >
+                            {/* Service name */}
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5 drop-shadow-xl">
+                                {lang === "en" ? service.title.en : service.title.bn}
+                            </h1>
 
-                        {/* Tagline */}
-                        <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-2xl mb-10 font-medium">
-                            {lang === "en" ? extended.tagline.en : extended.tagline.bn}
-                        </p>
+                            {/* Tagline */}
+                            <p className="text-lg md:text-xl text-white/90 leading-relaxed mb-8 font-medium drop-shadow-md">
+                                {lang === "en" ? extended.tagline.en : extended.tagline.bn}
+                            </p>
 
-                        {/* Hero CTAs */}
-                        <div className="flex flex-wrap gap-4">
-                            <a
-                                href="tel:+8801700000000"
-                                className="inline-flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 hover:shadow-emerald-500/50"
-                            >
-                                <PhoneCall size={20} />
-                                {lang === "en" ? "Call Now" : "鄏𥐰�鄏兒� 鄏𨫼曳 鄏𨫼旭鄑�成"}
-                            </a>
-                            <button
-                                onClick={handleBookClick}
-                                className="inline-flex items-center gap-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:-translate-y-0.5"
-                            >
-                                <MessageCircle size={20} />
-                                {lang === "en" ? "Book Service" : "鄏眇�鄏𨫼江鄏� 鄏舟江鄏�"}
-                            </button>
-                            {hasVideo && (
-                                <button
-                                    onClick={() => setVideoOpen(true)}
-                                    className="inline-flex items-center gap-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-xl border border-white/20 transition-all hover:-translate-y-0.5"
+                            {/* Hero CTAs */}
+                            <div className="flex flex-wrap gap-3 mt-8">
+                                <a
+                                    href="tel:+8801700000000"
+                                    className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-1 hover:shadow-emerald-500/40 text-base border border-transparent"
                                 >
-                                    <Play size={20} className="fill-white" />
-                                    {lang === "en" ? "Watch Video" : "鄏冢江鄏﹤江鄏� 鄏舟�鄏遤�鄏�"}
+                                    <PhoneCall size={18} />
+                                    {lang === "en" ? "Call Now" : "কল করুন"}
+                                </a>
+                                <button
+                                    onClick={handleBookClick}
+                                    className="inline-flex items-center gap-2 bg-white text-emerald-700 hover:bg-gray-50 border border-transparent font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-black/10 hover:-translate-y-1 text-base"
+                                >
+                                    <MessageCircle size={18} />
+                                    {lang === "en" ? "Book Service" : "বুক সার্ভিস"}
                                 </button>
-                            )}
-                        </div>
-                    </motion.div>
-                </div>
+                                {!hasVideo && (
+                                    <button
+                                        onClick={() => setVideoOpen(true)}
+                                        className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-6 py-3.5 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 transition-all text-base"
+                                    >
+                                        <Play size={18} className="fill-white" />
+                                        {lang === "en" ? "Watch Video" : "ভিডিও দেখুন"}
+                                    </button>
+                                )}
+                            </div>
+                        </motion.div>
 
+                        {/* Right Side Video Player embedded implicitly into Hero */}
+                        {hasVideo && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+                                className="w-full relative mt-10 lg:mt-0"
+                            >
+                                <div className="absolute -inset-4 bg-emerald-500/20 rounded-[2rem] blur-2xl pointer-events-none -z-10" />
+                                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-500/10 aspect-video border border-white/20 bg-gray-900 ring-4 ring-white/10 group">
+                                    <iframe
+                                        src={`${safeVideoUrl}?autoplay=0&rel=0&modestbranding=1`}
+                                        title={service.title.en}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full relative z-10"
+                                        loading="lazy"
+                                    />
+                                    {/* Subtitle / Overlay string */}
+                                    <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 z-20 pointer-events-none">
+                                        <div className="bg-black/40 backdrop-blur-md rounded-full px-4 py-2 text-white text-xs font-semibold shadow-lg">
+                                            {lang === "en" ? "Service Walkthrough" : "সার্ভিসটি সম্পর্কে জানুন"}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </div>
+                </div>
                 {/* Scroll indicator */}
                 <motion.div
                     className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-2 z-10"
@@ -212,7 +241,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                 <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-emerald-50 dark:bg-emerald-900/5 blur-3xl pointer-events-none" />
 
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
                         {/* Left: Overview */}
                         <motion.div
@@ -220,23 +249,24 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
+                            className="lg:col-span-8 lg:pr-6"
                         >
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold text-sm mb-6 border border-emerald-200 dark:border-emerald-800">
                                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                 {lang === "en" ? "Service Overview" : "鄏詮�鄏眇汙鄏� 鄏眇江鄏詮�鄏戈汙鄏啤江鄏�"}
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
                                 {lang === "en" ? service.title.en : service.title.bn}
                             </h2>
                             <div className="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-900/10 dark:to-gray-900 rounded-2xl p-7 border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
-                                <p className="text-lg text-gray-700 dark:text-gray-300 leading-[1.9] font-medium">
+                                <p className="text-base text-gray-700 dark:text-gray-300 leading-[1.9] font-medium">
                                     {lang === "en" ? (extended.fullDescription?.en || service.description.en) : (extended.fullDescription?.bn || service.description.bn)}
                                 </p>
                             </div>
 
                             {/* How It Delivers steps */}
                             <div className="mt-10 space-y-4">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                                <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">
                                     {lang === "en" ? "How It Works" : "鄏𨫼�鄏冢汙鄏眇� 鄏𨫼汙鄏� 鄏𨫼旭鄑�"}
                                 </h3>
                                 {extended.steps.map((step: { bn: string; en: string }, idx: number) => (
@@ -265,9 +295,9 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="lg:sticky lg:top-32"
+                            className="lg:col-span-4 lg:sticky lg:top-32"
                         >
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
                                 {lang === "en" ? "What You'll Get" : "鄏�扛鄏兒江 鄏芹汙鄏眇�鄏�"}
                             </h3>
                             <div className="space-y-4">
@@ -345,62 +375,12 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                             <Play size={13} className="fill-emerald-400" />
                             {lang === "en" ? "See It In Action" : "鄏詮�鄏眇汙鄏颴江 鄏舟�鄏遤�鄏�"}
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">
+                        <h2 className="text-2xl md:text-3xl font-bold text-white">
                             {lang === "en" ? "How We Deliver This Service" : "鄏�旨鄏啤汙 鄏𨫼�鄏冢汙鄏眇� 鄏𥐰� 鄏詮�鄏眇汙 鄏舟江鄏�"}
                         </h2>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-
-                        {/* Video Player */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            {hasVideo ? (
-                                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/50 aspect-video border border-white/10">
-                                    <iframe
-                                        src={`${safeVideoUrl}?autoplay=0&rel=0&modestbranding=1`}
-                                        title={service.title.en}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="w-full h-full"
-                                        loading="lazy"
-                                    />
-                                </div>
-                            ) : (
-                                /* Video placeholder �� thumbnail + play button */
-                                <button
-                                    onClick={() => setVideoOpen(true)}
-                                    className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 group cursor-pointer block"
-                                    aria-label="Play service video"
-                                >
-                                    <Image
-                                        src={service.image}
-                                        alt={service.title.en}
-                                        fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                                        unoptimized
-                                    />
-                                    <div className="absolute inset-0 bg-gray-950/60 group-hover:bg-gray-950/50 transition-colors" />
-                                    {/* Play button */}
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-20 h-20 rounded-full bg-emerald-500/90 flex items-center justify-center shadow-2xl shadow-emerald-500/40 group-hover:scale-110 transition-all duration-300">
-                                            <Play size={34} className="fill-white text-white translate-x-0.5" />
-                                        </div>
-                                    </div>
-                                    <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
-                                        <div className="bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 text-white text-sm font-medium">
-                                            {lang === "en" ? "�� Watch how we work" : "�� 鄏�旨鄏擒戌鄑�旭 鄏𨫼汙鄏� 鄏舟�鄏遤�鄏�"}
-                                        </div>
-                                    </div>
-                                </button>
-                            )}
-                            {/* Glow effect */}
-                            <div className="absolute -inset-4 bg-emerald-500/10 rounded-3xl blur-2xl -z-10 pointer-events-none" />
-                        </motion.div>
+                    <div className="max-w-4xl mx-auto">
 
                         {/* Deliveries */}
                         <motion.div
@@ -462,7 +442,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                             <Star size={13} className="fill-emerald-500 text-emerald-500" />
                             {lang === "en" ? "Client Stories" : "鄏芹旭鄏賴收鄏擒旭鄑�旭 鄏�早鄏賴�鄑温�鄏戈汙"}
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                             {lang === "en" ? "What Families Say" : "鄏芹旭鄏賴收鄏擒旭鄏鉮�鄏耜� 鄏𨫼� 鄏眇曳鄑�"}
                         </h2>
                     </motion.div>
@@ -527,7 +507,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                         <div className="w-20 h-20 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto mb-8">
                             <IconComponent size={40} strokeWidth={1.5} />
                         </div>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+                        <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold text-white mb-6 leading-tight">
                             {lang === "en"
                                 ? "Ready to get started?"
                                 : "鄏嗣�鄏啤� 鄏𨫼旭鄏戈� 鄏芹�鄏啤次鄑温忖鄑�忖?"}
