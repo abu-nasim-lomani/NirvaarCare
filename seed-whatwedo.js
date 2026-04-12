@@ -21,7 +21,7 @@ async function seed() {
         show_in_nav: true,
         nav_label_en: "What We Do",
         nav_label_bn: "আমরা যা করি",
-        nav_href: "/what-we-do",
+        nav_href: "#what-we-do",
         order_index: 2,
         content_data: {
             badge: { bn: "আমরা যা করি", en: "What We Do" },
