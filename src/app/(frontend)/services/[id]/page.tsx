@@ -129,7 +129,8 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
         ? servicesSection!.content_data
         : servicesData;
 
-    const service = cmsServicesData?.items?.find((s: any) => String(s.id) === String(id));
+    const service = cmsServicesData?.items?.find((s: any) => String(s.id) === String(id)) 
+        || servicesData.items.find((s: any) => String(s.id) === String(id));
 
     // In case the DB was saved before we added extended properties, fallback to constants
     const defaultVariant = servicesData.items.find((s: any) => String(s.id) === String(id));
