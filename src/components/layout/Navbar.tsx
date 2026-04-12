@@ -91,21 +91,26 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                 <Heart size={18} className="text-white" fill="white" />
                             </div>
                         )}
-                        <span className="text-2xl font-bold tracking-tight">
-                            <span className={effectiveScrolled && !isPreview ? "text-emerald-700 dark:text-emerald-400" : (isPreview ? "text-emerald-400" : "text-emerald-300")}>
-                                {lang === "en" ? "Nirvaar" : "নির্ভার"}
+                        <div className="flex flex-col leading-none">
+                            <span className="text-2xl font-bold tracking-tight">
+                                <span className={effectiveScrolled && !isPreview ? "text-emerald-700 dark:text-emerald-400" : (isPreview ? "text-emerald-400" : "text-emerald-300")}>
+                                    {lang === "en" ? "Nirvaar" : "নির্ভার"}
+                                </span>
+                                <span className={effectiveScrolled && !isPreview ? "text-gray-800 dark:text-gray-100" : "text-white"}>
+                                    {lang === "en" ? " Care" : " কেয়ার"}
+                                </span>
                             </span>
-                            <span className={effectiveScrolled && !isPreview ? "text-gray-800 dark:text-gray-100" : "text-white"}>
-                                {lang === "en" ? " Care" : " কেয়ার"}
+                            <span className="text-right text-[9px] font-semibold tracking-widest uppercase text-amber-500 dark:text-amber-400 mt-0.5">
+                                Beta Version
                             </span>
-                        </span>
+                        </div>
                     </Link>
 
                     {/* Desktop Nav Links */}
                     <div className="hidden xl:flex items-center gap-1">
                         {!isLoading && navItems.map((link) => (
                             <Link key={link.id} href={link.nav_href?.startsWith('#') ? `/${link.nav_href}` : link.nav_href || "#"}>
-                                <span className={`relative px-3.5 py-2 font-medium text-sm transition-colors duration-300 group rounded-lg block whitespace-nowrap ${
+                                <span className={`relative px-3.5 py-2 font-medium text-[15px] transition-colors duration-300 group rounded-lg block whitespace-nowrap ${
                                     effectiveScrolled
                                         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/20"
                                         : "text-white/90 hover:text-white hover:bg-white/10"
