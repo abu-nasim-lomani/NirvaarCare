@@ -194,7 +194,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                 <div className="absolute bottom-1/3 left-1/3 w-64 h-64 rounded-full bg-teal-500/10 blur-3xl animate-pulse pointer-events-none z-0" style={{ animationDelay: "1.5s" }} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-                    <div className={`grid grid-cols-1 ${hasVideo ? 'lg:grid-cols-2' : ''} gap-12 lg:gap-16 items-center`}>
+                    <div className="grid grid-cols-1 gap-12 lg:gap-16 items-center">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -227,45 +227,9 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                     <MessageCircle size={18} />
                                     {lang === "en" ? "Book Service" : "বুক সার্ভিস"}
                                 </button>
-                                {!hasVideo && (
-                                    <button
-                                        onClick={() => setVideoOpen(true)}
-                                        className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-6 py-3.5 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 transition-all text-base"
-                                    >
-                                        <Play size={18} className="fill-white" />
-                                        {lang === "en" ? "Watch Video" : "ভিডিও দেখুন"}
-                                    </button>
-                                )}
                             </div>
                         </motion.div>
 
-                        {/* Right Side Video Player embedded implicitly into Hero */}
-                        {hasVideo && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-                                className="w-full relative mt-10 lg:mt-0"
-                            >
-                                <div className="absolute -inset-4 bg-emerald-500/20 rounded-[2rem] blur-2xl pointer-events-none -z-10" />
-                                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-500/10 aspect-video border border-white/20 bg-gray-900 ring-4 ring-white/10 group">
-                                    <iframe
-                                        src={`${safeVideoUrl}?autoplay=0&rel=0&modestbranding=1`}
-                                        title={service.title.en}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="w-full h-full relative z-10"
-                                        loading="lazy"
-                                    />
-                                    {/* Subtitle / Overlay string */}
-                                    <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 z-20 pointer-events-none">
-                                        <div className="bg-black/40 backdrop-blur-md rounded-full px-4 py-2 text-white text-xs font-semibold shadow-lg">
-                                            {lang === "en" ? "Service Walkthrough" : "সার্ভিসটি সম্পর্কে জানুন"}
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
                     </div>
                 </div>
                 {/* Scroll indicator */}
@@ -275,7 +239,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                     transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
                 >
                     <span className="text-xs uppercase tracking-widest font-medium">
-                        {lang === "en" ? "Scroll" : "鄏詮�鄏𨫼�鄏啤曳 鄏𨫼旭鄑�成"}
+                        {lang === "en" ? "Scroll" : "Scroll"}
                     </span>
                     <ChevronDown size={20} />
                 </motion.div>
@@ -756,73 +720,75 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
             )}
             {/* ════ END DIAGNOSTIC SERVICE DEEP-DIVE ════ */}
 
-            {/* ���� Section 4: Video / How We Deliver �������������������������������������������������� */}
-            <section className="py-20 md:py-28 bg-gray-950 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(16,185,129,0.08)_0%,_transparent_60%)] pointer-events-none" />
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* ════ Section 4: Video / How We Deliver — TEMPORARILY HIDDEN ════ */}
+            {false && (
+                <section className="py-20 md:py-28 bg-gray-950 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(16,185,129,0.08)_0%,_transparent_60%)] pointer-events-none" />
+                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-14"
-                    >
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-900/40 text-emerald-400 font-semibold text-sm mb-4 border border-emerald-800/50">
-                            <Play size={13} className="fill-emerald-400" />
-                            {lang === "en" ? "See It In Action" : "See It In Action"}
-                        </div>
-                        <h2 className="text-2xl md:text-3xl font-bold text-white">
-                            {lang === "en" ? "How We Deliver This Service" : "How We Deliver This Service"}
-                        </h2>
-                    </motion.div>
-
-                    <div className="max-w-4xl mx-auto">
-
-                        {/* Deliveries */}
                         <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="space-y-6"
+                            className="text-center mb-14"
                         >
-                            {(extended.deliveries || []).map((delivery: { bn: string; en: string }, idx: number) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.12 }}
-                                    className="flex gap-5 group"
-                                >
-                                    <div className="flex flex-col items-center">
-                                        <div className="w-10 h-10 rounded-full bg-emerald-500 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
-                                            <CheckCircle2 size={16} />
-                                        </div>
-                                        {idx < (extended.deliveries?.length || 0) - 1 && (
-                                            <div className="w-0.5 h-8 bg-emerald-900/60 mt-2" />
-                                        )}
-                                    </div>
-                                    <div className="pb-4">
-                                        <p className="text-white/80 font-medium leading-relaxed group-hover:text-white transition-colors">
-                                            {lang === "en" ? delivery.en : delivery.bn}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            ))}
-
-                            <a
-                                href="tel:+8801700000000"
-                                className="inline-flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-4 rounded-xl transition-all mt-4 shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 group"
-                            >
-                                <PhoneCall size={18} />
-                                {lang === "en" ? "Start Today" : "Start Today"}
-                                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </a>
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-900/40 text-emerald-400 font-semibold text-sm mb-4 border border-emerald-800/50">
+                                <Play size={13} className="fill-emerald-400" />
+                                {lang === "en" ? "See It In Action" : "See It In Action"}
+                            </div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-white">
+                                {lang === "en" ? "How We Deliver This Service" : "How We Deliver This Service"}
+                            </h2>
                         </motion.div>
+
+                        <div className="max-w-4xl mx-auto">
+
+                            {/* Deliveries */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 30 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="space-y-6"
+                            >
+                                {(extended.deliveries || []).map((delivery: { bn: string; en: string }, idx: number) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: idx * 0.12 }}
+                                        className="flex gap-5 group"
+                                    >
+                                        <div className="flex flex-col items-center">
+                                            <div className="w-10 h-10 rounded-full bg-emerald-500 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                                                <CheckCircle2 size={16} />
+                                            </div>
+                                            {idx < (extended.deliveries?.length || 0) - 1 && (
+                                                <div className="w-0.5 h-8 bg-emerald-900/60 mt-2" />
+                                            )}
+                                        </div>
+                                        <div className="pb-4">
+                                            <p className="text-white/80 font-medium leading-relaxed group-hover:text-white transition-colors">
+                                                {lang === "en" ? delivery.en : delivery.bn}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+
+                                <a
+                                    href="tel:+8801700000000"
+                                    className="inline-flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-4 rounded-xl transition-all mt-4 shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 group"
+                                >
+                                    <PhoneCall size={18} />
+                                    {lang === "en" ? "Start Today" : "Start Today"}
+                                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            </motion.div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* ── Section 5: Testimonial Spotlight ─────────────────────────────────── */}
             <section className="py-20 md:py-24 bg-gradient-to-b from-white to-emerald-50/50 dark:from-gray-950 dark:to-emerald-950/10">

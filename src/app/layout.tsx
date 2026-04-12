@@ -3,6 +3,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SiteConfigProvider } from "@/context/SiteConfigContext";
+import BetaWatermark from "@/components/ui/BetaWatermark";
 
 import { Hind_Siliguri } from "next/font/google";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
           <LanguageProvider>
             <SiteConfigProvider>
               {children}
+              <BetaWatermark />
             </SiteConfigProvider>
           </LanguageProvider>
         </ThemeProvider>

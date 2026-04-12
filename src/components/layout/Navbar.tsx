@@ -100,9 +100,6 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                     {lang === "en" ? " Care" : " কেয়ার"}
                                 </span>
                             </span>
-                            <span className="text-right text-[9px] font-semibold tracking-widest uppercase text-amber-500 dark:text-amber-400 mt-0.5">
-                                Beta Version
-                            </span>
                         </div>
                     </Link>
 
@@ -323,11 +320,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.06 }}
                                         onClick={() => setIsOpen(false)}
-                                        className={`flex items-center px-4 py-3 text-base font-medium transition-all duration-200 cursor-pointer ${
-                                            effectiveScrolled && !isPreview
-                                                ? "text-gray-700 dark:text-gray-200 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 rounded-xl"
-                                                : "text-white/90 hover:text-white hover:bg-white/10 rounded-xl"
-                                        }`}
+                                        className="flex items-center px-4 py-3 text-base font-medium transition-all duration-200 cursor-pointer text-gray-700 dark:text-gray-200 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 rounded-xl"
                                     >
                                         {lang === "en" ? link.nav_label_en : link.nav_label_bn}
                                     </motion.span>

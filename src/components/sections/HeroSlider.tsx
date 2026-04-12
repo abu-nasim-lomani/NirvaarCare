@@ -275,12 +275,7 @@ export default function HeroSlider({
                                 aria-label={`Go to slide ${idx + 1}`}
                                 className="group flex flex-col items-start gap-1.5 cursor-pointer"
                             >
-                                {/* Slide number */}
-                                <span className={`text-[10px] font-bold transition-colors duration-300 ${
-                                    activeIndex === idx ? "text-emerald-400" : "text-white/30 group-hover:text-white/60"
-                                }`}>
-                                    0{idx + 1}
-                                </span>
+                                {/* Slide number removed as per request */}
                                 {/* Progress track */}
                                 <div className="h-0.5 rounded-full overflow-hidden bg-white/20" style={{ width: activeIndex === idx ? 52 : 20 }}>
                                     <div
