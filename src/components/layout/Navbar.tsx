@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, PhoneCall, Heart, Sun, Moon, Globe, User, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, PhoneCall, Heart, Sun, Moon, Globe, User, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLang } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useSiteConfig } from "@/context/SiteConfigContext";
@@ -19,6 +20,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const { lang, toggleLang } = useLang();
     const { isDark, toggleTheme } = useTheme();
+    const pathname = usePathname();
     const { sections, isLoading } = useSiteConfig();
     const navItems = sections.filter(s => s.is_visible && s.show_in_nav);
 
@@ -58,7 +60,10 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
     // Get initials for the avatar circle
     const initials = displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
-    const iconBtnClass = (scrolled: boolean) => scrolled
+    const isDashboard = pathname?.includes('/dashboard') || false;
+    const effectiveScrolled = scrolled || isDashboard;
+
+    const iconBtnClass = (active: boolean) => active
         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800"
         : "text-white/80 hover:text-white hover:bg-white/15 hover:border-white/20";
 
@@ -69,7 +74,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={`${isPreview ? "relative !bg-gray-900 border-none rounded-2xl overflow-hidden mt-4" : "fixed"} w-full z-50 top-0 transition-all duration-500 ${
-                scrolled && !isPreview
+                effectiveScrolled && !isPreview
                     ? "bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-lg border-b border-gray-100 dark:border-gray-800"
                     : (isPreview ? "" : "bg-transparent border-b border-transparent")
             }`}
@@ -87,10 +92,10 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             </div>
                         )}
                         <span className="text-2xl font-bold tracking-tight">
-                            <span className={scrolled && !isPreview ? "text-emerald-700 dark:text-emerald-400" : (isPreview ? "text-emerald-400" : "text-emerald-300")}>
+                            <span className={effectiveScrolled && !isPreview ? "text-emerald-700 dark:text-emerald-400" : (isPreview ? "text-emerald-400" : "text-emerald-300")}>
                                 {lang === "en" ? "Nirvaar" : "নির্ভার"}
                             </span>
-                            <span className={scrolled && !isPreview ? "text-gray-800 dark:text-gray-100" : "text-white"}>
+                            <span className={effectiveScrolled && !isPreview ? "text-gray-800 dark:text-gray-100" : "text-white"}>
                                 {lang === "en" ? " Care" : " কেয়ার"}
                             </span>
                         </span>
@@ -101,7 +106,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                         {!isLoading && navItems.map((link) => (
                             <Link key={link.id} href={link.nav_href}>
                                 <span className={`relative px-3.5 py-2 font-medium text-sm transition-colors duration-300 group rounded-lg block whitespace-nowrap ${
-                                    scrolled
+                                    effectiveScrolled
                                         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/20"
                                         : "text-white/90 hover:text-white hover:bg-white/10"
                                 }`}>
@@ -121,7 +126,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleLang}
                             title={lang === "en" ? "Switch to Bangla" : "Switch to English"}
-                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent relative ${iconBtnClass(scrolled && !isPreview)}`}
+                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent relative ${iconBtnClass(effectiveScrolled && !isPreview)}`}
                         >
                             <AnimatePresence mode="wait">
                                 {lang === "en" ? (
@@ -144,7 +149,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleTheme}
                             title={lang === "en" ? "Toggle theme" : "থিম পরিবর্তন"}
-                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent ${iconBtnClass(scrolled && !isPreview)}`}
+                            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 border border-transparent ${iconBtnClass(effectiveScrolled && !isPreview)}`}
                         >
                             <AnimatePresence mode="wait">
                                 {isDark ? (
@@ -169,7 +174,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                         whileTap={{ scale: 0.96 }}
                                         onClick={() => setUserMenuOpen(!userMenuOpen)}
                                         className={`flex items-center gap-2 px-3 py-2 rounded-full font-medium text-sm transition-all duration-200 border ml-1 ${
-                                            scrolled
+                                            effectiveScrolled
                                                 ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
                                                 : "bg-white/10 border-white/20 text-white hover:bg-white/20"
                                         }`}
@@ -195,6 +200,14 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                                     <p className="text-xs text-gray-500">Signed in as</p>
                                                     <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{displayName}</p>
                                                 </div>
+                                                <Link
+                                                    href="/dashboard"
+                                                    onClick={() => setUserMenuOpen(false)}
+                                                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors border-b border-gray-100 dark:border-gray-800"
+                                                >
+                                                    <LayoutDashboard size={16} />
+                                                    {lang === "en" ? "Dashboard" : "ড্যাশবোর্ড"}
+                                                </Link>
                                                 <button
                                                     onClick={handleLogout}
                                                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -213,7 +226,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                     whileTap={{ scale: 0.96 }}
                                     onClick={() => setAuthModalOpen(true)}
                                     className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 border ml-1 ${
-                                        scrolled
+                                        effectiveScrolled
                                             ? "border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                                             : "border-white/30 text-white hover:bg-white/10"
                                     }`}
@@ -233,7 +246,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleLang}
                             className={`w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${
-                                scrolled
+                                effectiveScrolled
                                     ? "text-gray-600 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                                     : "text-white/80 hover:text-white hover:bg-white/10"
                             }`}
@@ -257,7 +270,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={toggleTheme}
                             className={`w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${
-                                scrolled
+                                effectiveScrolled
                                     ? "text-gray-600 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                                     : "text-white/80 hover:text-white hover:bg-white/10"
                             }`}
@@ -305,7 +318,11 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.06 }}
                                         onClick={() => setIsOpen(false)}
-                                        className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 rounded-xl transition-all duration-200 cursor-pointer"
+                                        className={`flex items-center px-4 py-3 text-base font-medium transition-all duration-200 cursor-pointer ${
+                                            effectiveScrolled && !isPreview
+                                                ? "text-gray-700 dark:text-gray-200 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 rounded-xl"
+                                                : "text-white/90 hover:text-white hover:bg-white/10 rounded-xl"
+                                        }`}
                                     >
                                         {lang === "en" ? link.nav_label_en : link.nav_label_bn}
                                     </motion.span>
@@ -326,6 +343,14 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                                     <p className="text-xs text-gray-500">Logged in</p>
                                                 </div>
                                             </div>
+                                            <Link
+                                                href="/dashboard"
+                                                onClick={() => setIsOpen(false)}
+                                                className="w-full flex items-center gap-2 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-xl transition-colors"
+                                            >
+                                                <LayoutDashboard size={16} />
+                                                {lang === "en" ? "Dashboard" : "ড্যাশবোর্ড"}
+                                            </Link>
                                             <button
                                                 onClick={() => { handleLogout(); setIsOpen(false); }}
                                                 className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
@@ -365,7 +390,10 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
         <AuthModal
             isOpen={authModalOpen}
             onClose={() => setAuthModalOpen(false)}
-            onSuccess={() => setAuthModalOpen(false)}
+            onSuccess={() => {
+                setAuthModalOpen(false);
+                window.location.href = "/dashboard";
+            }}
         />
         </>
     );

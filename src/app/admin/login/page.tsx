@@ -31,15 +31,27 @@ export default function AdminLogin() {
             return;
         }
 
-        // Check if admin
-        if (!data.user?.email?.toLowerCase().includes("admin")) {
-            setError("Access denied. Admin privileges required.");
+        // Check role in user_roles table
+        const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', data.user.id)
+            .single();
+
+        const role = roleData?.role;
+
+        if (role !== 'admin' && role !== 'manager') {
+            setError("Access denied. Admin or Manager privileges required.");
             await supabase.auth.signOut();
             return;
         }
 
-        // Success, refresh the router so middleware kicks in and redirect to /admin
-        router.push("/admin");
+        // Success, refresh the router so middleware kicks in and redirect
+        if (role === 'manager') {
+            router.push("/admin/manager");
+        } else {
+            router.push("/admin");
+        }
         router.refresh();
     };
 
@@ -51,8 +63,8 @@ export default function AdminLogin() {
                         <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Lock className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Access</h1>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Please sign in to access the Nirvaar CMS</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin & Operations Access</h1>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Please sign in to access the Nirvaar CMS & Hub</p>
                     </div>
 
                     <form onSubmit={handleLogin} className="space-y-5">

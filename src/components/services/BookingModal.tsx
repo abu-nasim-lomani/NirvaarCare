@@ -187,6 +187,14 @@ export default function BookingModal({ isOpen, onClose, serviceId, serviceName }
         
         const { data: { user } } = await supabase.auth.getUser();
 
+        let has_transport = false;
+        let report_type = 'online';
+
+        if (serviceId === 1) { // Diagnostic
+            if (formData.diagMode === "Escort") has_transport = true;
+            if (formData.diagReportDest === "Hard Copy to Home") report_type = 'hardcopy';
+        }
+
         const payload = {
             service_id: serviceId,
             service_name_en: serviceName.en,
@@ -195,6 +203,8 @@ export default function BookingModal({ isOpen, onClose, serviceId, serviceName }
             requester_phone: formData.reqPhone,
             patient_name: formData.patName,
             booking_data: formData,
+            has_transport,
+            report_type,
             status: "Pending",
             user_id: user?.id
         };

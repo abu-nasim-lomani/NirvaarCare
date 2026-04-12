@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 export interface SiteSection {
     id: string;
@@ -39,6 +39,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
 
     const fetchSections = async () => {
         setIsLoading(true);
+        const supabase = createClient();
         const { data, error } = await supabase
             .from("site_sections")
             .select("*")
@@ -69,6 +70,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
             order_index: index + 1,
         }));
 
+        const supabase = createClient();
         const { error } = await supabase.from("site_sections").upsert(updates);
         
         if (error) {
@@ -82,6 +84,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
         setSections((prev) =>
             prev.map((s) => (s.id === id ? { ...s, is_visible } : s))
         );
+        const supabase = createClient();
         const { error } = await supabase
             .from("site_sections")
             .update({ is_visible })
@@ -96,6 +99,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
         setSections((prev) =>
             prev.map((s) => (s.id === id ? { ...s, show_in_nav } : s))
         );
+        const supabase = createClient();
         const { error } = await supabase
             .from("site_sections")
             .update({ show_in_nav })
@@ -107,6 +111,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
     };
 
     const addSection = async (section: Omit<SiteSection, "id">) => {
+        const supabase = createClient();
         const { data, error } = await supabase
             .from("site_sections")
             .insert(section)
@@ -122,6 +127,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
 
     const deleteSection = async (id: string) => {
         setSections((prev) => prev.filter((s) => s.id !== id));
+        const supabase = createClient();
         const { error } = await supabase.from("site_sections").delete().eq("id", id);
         if (error) {
             console.error("Error deleting section:", error);
@@ -133,6 +139,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
         setSections((prev) =>
             prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
         );
+        const supabase = createClient();
         const { error } = await supabase
             .from("site_sections")
             .update(updates)
@@ -147,6 +154,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
         setSections((prev) =>
             prev.map((s) => (s.id === id ? { ...s, content_data } : s))
         );
+        const supabase = createClient();
         const { error } = await supabase
             .from("site_sections")
             .update({ content_data })
