@@ -104,7 +104,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                     {/* Desktop Nav Links */}
                     <div className="hidden xl:flex items-center gap-1">
                         {!isLoading && navItems.map((link) => (
-                            <Link key={link.id} href={link.nav_href?.startsWith('#') && pathname !== '/' ? `/${link.nav_href}` : link.nav_href || "#"}>
+                            <Link key={link.id} href={link.nav_href?.startsWith('#') ? `/${link.nav_href}` : link.nav_href || "#"}>
                                 <span className={`relative px-3.5 py-2 font-medium text-sm transition-colors duration-300 group rounded-lg block whitespace-nowrap ${
                                     effectiveScrolled
                                         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/20"
@@ -312,7 +312,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                     >
                         <div className="px-4 pt-3 pb-6 space-y-1">
                             {!isLoading && navItems.map((link, index) => (
-                                <Link key={link.id} href={link.nav_href?.startsWith('#') && pathname !== '/' ? `/${link.nav_href}` : link.nav_href || "#"}>
+                                <Link key={link.id} href={link.nav_href?.startsWith('#') ? `/${link.nav_href}` : link.nav_href || "#"}>
                                     <motion.span
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
