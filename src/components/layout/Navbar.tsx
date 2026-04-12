@@ -61,7 +61,8 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
     const initials = displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
     const isDashboard = pathname?.includes('/dashboard') || false;
-    const effectiveScrolled = scrolled || isDashboard;
+    const isDarkHeroPage = pathname === '/' || pathname?.startsWith('/services/');
+    const effectiveScrolled = scrolled || isDashboard || !isDarkHeroPage;
 
     const iconBtnClass = (active: boolean) => active
         ? "text-gray-600 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800"

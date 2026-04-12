@@ -209,7 +209,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
 
                             {/* Tagline */}
                             <p className="text-lg md:text-xl text-white/90 leading-relaxed mb-8 font-medium drop-shadow-md">
-                                {lang === "en" ? extended.tagline.en : extended.tagline.bn}
+                                {lang === "en" ? extended?.tagline?.en : extended?.tagline?.bn}
                             </p>
 
                             {/* Hero CTAs */}
@@ -281,7 +281,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                 <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">
                                     {lang === "en" ? "How It Works" : "কিভাবে কাজ করে"}
                                 </h3>
-                                {extended.steps.map((step: { bn: string; en: string }, idx: number) => (
+                                {(extended?.steps || []).map((step: { bn: string; en: string }, idx: number) => (
                                     <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, x: -15 }}
@@ -294,7 +294,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                             {idx + 1}
                                         </div>
                                         <p className="text-gray-700 dark:text-gray-300 pt-1 font-medium leading-relaxed">
-                                            {lang === "en" ? step.en : step.bn}
+                                            {lang === "en" ? step?.en : step?.bn}
                                         </p>
                                     </motion.div>
                                 ))}
@@ -313,7 +313,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                 {lang === "en" ? "What You'll Get" : "আপনি যা পাবেন"}
                             </h3>
                             <div className="space-y-4">
-                                {extended.benefits.map((benefit: { icon: string; bn: string; en: string }, idx: number) => (
+                                {(extended?.benefits || []).map((benefit: { icon: string; bn: string; en: string }, idx: number) => (
                                     <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, y: 15 }}
@@ -752,7 +752,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                 transition={{ duration: 0.6, delay: 0.2 }}
                                 className="space-y-6"
                             >
-                                {(extended.deliveries || []).map((delivery: { bn: string; en: string }, idx: number) => (
+                                {(extended?.deliveries || []).map((delivery: { bn: string; en: string }, idx: number) => (
                                     <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, x: 20 }}
@@ -829,7 +829,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
 
                                 {/* Quote */}
                                 <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed italic flex-grow mb-6">
-                                    "{lang === "en" ? t.quote.en : t.quote.bn}"
+                                    "{lang === "en" ? t?.quote?.en : t?.quote?.bn}"
                                 </p>
 
                                 {/* Person */}
@@ -837,7 +837,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                     <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-emerald-200 dark:border-emerald-800 shrink-0">
                                         <Image
                                             src={t.image}
-                                            alt={t.name.en}
+                                            alt={t?.name?.en || "Testimonial Image"}
                                             fill
                                             className="object-cover"
                                             unoptimized
@@ -845,10 +845,10 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                     </div>
                                     <div>
                                         <p className="font-bold text-gray-900 dark:text-white text-sm">
-                                            {lang === "en" ? t.name.en : t.name.bn}
+                                            {lang === "en" ? t?.name?.en : t?.name?.bn}
                                         </p>
                                         <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                                            {lang === "en" ? t.role.en : t.role.bn}
+                                            {lang === "en" ? t?.role?.en : t?.role?.bn}
                                         </p>
                                     </div>
                                 </div>
