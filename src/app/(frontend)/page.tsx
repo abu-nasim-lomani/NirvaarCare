@@ -30,8 +30,23 @@ const sectionComponents: Record<string, any> = {
     EmergencyCTA,
 };
 
+import { useEffect } from "react";
+
 export default function Home() {
     const { sections, isLoading } = useSiteConfig();
+
+    // Fix for direct hash navigation (e.g. /#why-choose-us) loading issue
+    useEffect(() => {
+        if (!isLoading && typeof window !== "undefined" && window.location.hash) {
+            setTimeout(() => {
+                const id = window.location.hash.replace("#", "");
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                }
+            }, 150);
+        }
+    }, [isLoading]);
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center"><div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>;
