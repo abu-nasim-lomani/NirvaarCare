@@ -27,6 +27,7 @@ import TestimonialEditor from "@/components/admin/editors/TestimonialEditor";
 import EmergencyCTAEditor from "@/components/admin/editors/EmergencyCTAEditor";
 import FooterEditor from "@/components/admin/editors/FooterEditor";
 import NavbarEditor from "@/components/admin/editors/NavbarEditor";
+import WhatWeDoEditor from "@/components/admin/editors/WhatWeDoEditor";
 
 export default function VisualEditor({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -62,6 +63,15 @@ export default function VisualEditor({ params }: { params: Promise<{ id: string 
                         setLocalData(JSON.parse(JSON.stringify(testimonialData)));
                     } else if (section.component_id === "EmergencyCTA") {
                         setLocalData(JSON.parse(JSON.stringify(emergencyCtaData)));
+                    } else if (section.component_id === "WhatWeDo") {
+                        setLocalData({
+                            badge: { bn: "আমরা যা করি", en: "What We Do" },
+                            title: { bn: "আপনার প্রিয়জনের যত্নে আমাদের প্রতিশ্রুতি", en: "Our Commitment to Caring for Your Loved Ones" },
+                            paragraphs: [
+                                { bn: "প্রিয় মানুষদের থেকে দূরে থাকা সহজ নয়। জীবনের প্রয়োজনে অনেকেই দেশের বাইরে বা ব্যস্ত শহরে থাকেন, কিন্তু মন সবসময় পড়ে থাকে বাবা-মা ও আপনজনদের কাছে। তারা কেমন আছেন, সময়মতো খাচ্ছেন কিনা, অসুস্থ হলে পাশে কেউ আছে কিনা - এই দুশ্চিন্তা যেন আপনাকে একা বহন করতে না হয়, সেই দায়িত্বই নেয় নির্ভার কেয়ার।", en: "Being away from your loved ones is never easy. Many people live abroad or in busy cities due to work or life commitments, yet their hearts remain close to their parents and family members. Concerns about whether they are eating on time, staying well, or receiving proper care during illness can often become a constant worry. Nirvaar Care is here to share that responsibility with you." },
+                                { bn: "আমরা শুধু একটি সেবা প্রদান করি না - আমরা চেষ্টা করি আপনার পরিবারের একজন হয়ে উঠতে। যত্ন, সম্মান ও আন্তরিকতার সাথে আমরা নিশ্চিত করি, আপনার প্রিয়জনরা সবসময় নিরাপদ, স্বস্তিতে এবং ভালো আছেন।", en: "We are not just a service provider — we strive to become a trusted extension of your family. With compassion, respect, and sincere care, we ensure that your loved ones remain safe, comfortable, and well cared for at all times." }
+                            ]
+                        });
                     } else if (section.component_id === "Footer") {
                         setLocalData(JSON.parse(JSON.stringify(footerData)));
                     } else if (section.component_id === "Navbar") {
@@ -137,6 +147,11 @@ export default function VisualEditor({ params }: { params: Promise<{ id: string 
                         />
                     ) : activeSection.component_id === "HowItWorks" ? (
                         <HowItWorksEditor 
+                            localData={localData} 
+                            setLocalData={setLocalData} 
+                        />
+                    ) : activeSection.component_id === "WhatWeDo" ? (
+                        <WhatWeDoEditor 
                             localData={localData} 
                             setLocalData={setLocalData} 
                         />

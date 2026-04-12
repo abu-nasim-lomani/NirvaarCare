@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useSiteConfig } from "@/context/SiteConfigContext";
 import TrustBanner from "@/components/sections/TrustBanner";
 import AboutUs from "@/components/sections/AboutUs";
+import WhatWeDo from "@/components/sections/WhatWeDo";
 import ServicesGrid from "@/components/sections/ServicesGrid";
 import HowItWorks from "@/components/sections/HowItWorks";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
@@ -21,6 +22,7 @@ const sectionComponents: Record<string, any> = {
     HeroSlider,
     TrustBanner,
     AboutUs,
+    WhatWeDo,
     ServicesGrid,
     HowItWorks,
     WhyChooseUs,
@@ -35,11 +37,12 @@ export default function Home() {
         return <div className="min-h-screen flex items-center justify-center"><div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>;
     }
 
-    const visibleSections = sections.filter(sec => sec.is_visible);
+    let finalSections = [...sections.filter(sec => sec.is_visible)];
+    finalSections.sort((a, b) => a.order_index - b.order_index);
 
     return (
         <main className="flex-1 flex flex-col w-full">
-            {visibleSections.map((section) => {
+            {finalSections.map((section) => {
                 const Component = sectionComponents[section.component_id];
                 if (!Component) return null;
                 return <Component key={section.id} data={section.content_data} />;

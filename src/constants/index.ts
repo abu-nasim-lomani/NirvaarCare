@@ -101,162 +101,134 @@ export const servicesData = {
         {
             id: 1,
             icon: "Activity",
-            title: { bn: "ডায়াগনস্টিক ও পরীক্ষা সেবা", en: "Diagnostic & Medical Tests" },
+            title: { bn: "ডায়াগনস্টিক ও মেডিকেল পরীক্ষা সংক্রান্ত সেবা", en: "Diagnostic & Medical Test Support Services" },
             image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "ডায়াগনস্টিক সেন্টারে যাতায়াত সহায়তা, সার্বিক তত্ত্বাবধান এবং ঘরে বসে পরীক্ষা করার সুবিধা।", 
-                en: "Assistance with diagnostic center visits, overall supervision, and at-home testing facilities." 
+                bn: "ঘরে বসেই প্রয়োজনীয় গুরুত্বপূর্ণ মেডিকেল পরীক্ষা করার সহায়তা।", 
+                en: "Assistance in arranging important medical tests from the comfort of home when possible." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "সঠিক পরীক্ষা, সঠিক সময়ে—আপনার স্বাস্থ্য আমাদের দায়িত্ব।", en: "The right test at the right time — your health is our responsibility." },
+                tagline: { bn: "আপনার স্বাস্থ্য আমাদের দায়িত্ব", en: "Your health is our responsibility" },
                 benefits: [
-                    { icon: "home", bn: "বাড়িতে বসেই স্যাম্পল সংগ্রহ", en: "Sample collection at your doorstep" },
-                    { icon: "report", bn: "ডিজিটাল রিপোর্ট ডেলিভারি", en: "Digital report delivery to family" },
-                    { icon: "escort", bn: "ডায়াগনস্টিক সেন্টারে কেয়ারগিভার সঙ্গ", en: "Caregiver escort to diagnostic center" },
-                    { icon: "doctor", bn: "রিপোর্ট ব্যাখ্যায় ডাক্তার সহায়তা", en: "Doctor assistance for report interpretation" }
+                    { icon: "home", bn: "ঘরে বসেই প্রয়োজনীয় গুরুত্বপূর্ণ মেডিকেল পরীক্ষা করার সহায়তা।", en: "Assistance in arranging important medical tests from the comfort of home when possible." },
+                    { icon: "search", bn: "প্রয়োজন অনুযায়ী উপযুক্ত ডায়াগনস্টিক সেন্টার নির্ধারণ ও সময় নির্ধারণে সহায়তা।", en: "Support in selecting suitable diagnostic centers and scheduling appointments as needed." },
+                    { icon: "escort", bn: "ডায়াগনস্টিক সেন্টারে নেওয়া আনার ব্যবস্থা এবং পরীক্ষার পুরো প্রক্রিয়ায় নির্ভরযোগ্য অ্যাটেনডেন্টের তত্ত্বাবধান ও সহায়তা প্রদান।", en: "Arrangement of transportation to and from diagnostic centers, along with supervision by a reliable attendant throughout the process." },
+                    { icon: "file", bn: "পরীক্ষার রিপোর্ট সংগ্রহ করে পৌঁছে দেওয়া এবং প্রয়োজনে ডক্টরের পরামর্শ গ্রহনে সহায়তা।", en: "Collection and delivery of medical reports, and assistance in consulting doctors if required." }
                 ],
-                deliveries: [
-                    { bn: "দ্রুততম সময়ে সেবা প্রদান", en: "Fastest possible service delivery" },
-                    { bn: "অভিজ্ঞ পেশাদারদের দ্বারা পরিচালিত", en: "Handled by experienced professionals" },
-                    { bn: "২৪/৭ মনিটরিং এবং আপডেট", en: "24/7 monitoring and live updates" }
-                ],
-                steps: [
-                    { bn: "হেল্পলাইনে কল করুন এবং পরীক্ষার ধরন জানান", en: "Call our helpline and specify the tests required" },
-                    { bn: "আমাদের টিম সুবিধাজনক সময় ও কেন্দ্র নির্বাচন করে দেবে", en: "Our team selects a convenient time & center for you" },
-                    { bn: "কেয়ারগিভার প্রিয়জনকে সঙ্গ নিয়ে পরীক্ষা সম্পন্ন করবে", en: "Caregiver accompanies your loved one for the tests" },
-                    { bn: "রিপোর্ট ডিজিটালি পাঠানো হবে এবং ডাক্তারের পরামর্শ নেওয়া হবে", en: "Report is shared digitally and doctor consultation is arranged" }
-                ]
+                steps: []
             }
         },
         {
             id: 2,
             icon: "Stethoscope",
-            title: { bn: "চিকিৎসক-সম্পর্কিত সেবা", en: "Doctor-related Services" },
+            title: { bn: "চিকিৎসক সম্পর্কিত সেবা", en: "Doctor Consultation Support Services" },
             image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "সরাসরি সাক্ষাতের সময় নির্ধারণ, সার্বিক সহায়তা ও অনলাইন চিকিৎসা পরামর্শ।", 
-                en: "Scheduling in-person appointments, comprehensive assistance, and online medical consultations." 
+                bn: "রোগের ধরন অনুযায়ী উপযুক্ত চিকিৎসক নির্বাচন করতে সহায়তা।", 
+                en: "Assistance in selecting appropriate doctors based on the patient’s condition." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "সেরা চিকিৎসকের পরামর্শ, আপনার দোরগোড়ায়।", en: "The best medical advice, brought to your doorstep." },
+                tagline: { bn: "সেরা চিকিৎসকের পরামর্শ", en: "The best medical advice" },
                 benefits: [
-                    { icon: "calendar", bn: "চিকিৎসকের অ্যাপয়েন্টমেন্ট নির্ধারণ", en: "Doctor appointment scheduling & booking" },
-                    { icon: "escort", bn: "হাসপাতালে সঙ্গ করে নিয়ে যাওয়া", en: "Physical escort to hospital & clinic" },
-                    { icon: "video", bn: "অনলাইন ভিডিও কনসালটেশন সহায়তা", en: "Assisted online video consultation" },
-                    { icon: "follow", bn: "ফলো-আপ অ্যাপয়েন্টমেন্ট ট্র্যাকিং", en: "Follow-up appointment tracking & reminders" }
+                    { icon: "search", bn: "রোগের ধরন অনুযায়ী উপযুক্ত চিকিৎসক নির্বাচন করতে সহায়তা।", en: "Assistance in selecting appropriate doctors based on the patient’s condition." },
+                    { icon: "calendar", bn: "চিকিৎসকের সাথে সরাসরি সাক্ষাতের সময় (অ্যাপয়েন্টমেন্ট) নির্ধারণে সহায়তা।", en: "Help in scheduling appointments with doctors." },
+                    { icon: "escort", bn: "চিকিৎসকের কাছে যাতায়াত থেকে চিকিৎসা গ্রহণ পর্যন্ত পুরো প্রক্রিয়ায় সার্বিক সহযোগিতা নিশ্চিত করা।", en: "End-to-end support throughout the consultation process, including transportation arrangements if needed." },
+                    { icon: "video", bn: "ঘরে বসেই অনলাইন বা ভিডিও কনফারেন্সের মাধ্যমে চিকিৎসকের পরামর্শ গ্রহণ।", en: "Assistance in arranging online or video consultations from home." },
+                    { icon: "car", bn: "প্রয়োজন অনুযায়ী চিকিৎসকের কাছে যাতায়াতের জন্য পরিবহন ব্যবস্থায় সহায়তা প্রদান।", en: "Coordination of transportation to visit doctors when required." },
+                    { icon: "user", bn: "চিকিৎসকের পরামর্শ গ্রহণের পুরো প্রক্রিয়ায় সমন্বয় ও ব্যবস্থাপনার জন্য একজন সহযোগি প্রদান।", en: "Providing a dedicated assistant to coordinate the entire consultation process." }
                 ],
-                steps: [
-                    { bn: "ডাক্তারের বিশেষত্ব ও পছন্দ জানান", en: "Tell us the specialty and doctor preference" },
-                    { bn: "আমরা সেরা ও সুবিধাজনক অ্যাপয়েন্টমেন্ট বুক করব", en: "We book the best available appointment" },
-                    { bn: "নির্ধারিত দিনে কেয়ারগিভার সঙ্গে থাকবে", en: "Caregiver stays with them on the appointment day" },
-                    { bn: "ডাক্তারের পরামর্শ এবং প্রেসক্রিপশন পরিবারকে পাঠানো হবে", en: "Doctor's advice & prescription is shared with family" }
-                ]
+                steps: []
             }
         },
         {
             id: 3,
             icon: "Pill",
-            title: { bn: "ঔষধ-সংক্রান্ত সেবা", en: "Medicine-related Services" },
+            title: { bn: "ঔষধ সংক্রান্ত সেবা", en: "Medication Support Services" },
             image: "https://images.unsplash.com/photo-1584308666744-24d5e45a557b?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "ঔষধের চাহিদা নির্ধারণ, সময়মতো সংগ্রহ ও বাসায় পৌঁছে দেওয়া, সেবন পর্যবেক্ষণ এবং প্রয়োজনে চিকিৎসক পরামর্শ সমন্বয়।", 
-                en: "Determining medicine needs, timely collection & home delivery, dosage monitoring, and doctor consultation coordination." 
+                bn: "প্রেসক্রিপশন অনুযায়ী প্রয়োজনীয় ঔষধের চাহিদা নির্ধারণে সহায়তা।", 
+                en: "Assistance in identifying required medications based on prescriptions." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "সঠিক ঔষধ, সঠিক সময়ে—মিস হবে না একটি ডোজও।", en: "The right medicine, on time — not a single dose missed." },
+                tagline: { bn: "সঠিক ঔষধ, সঠিক সময়ে", en: "The right medicine, on time" },
                 benefits: [
-                    { icon: "delivery", bn: "প্রেসক্রিপশন অনুযায়ী ঔষধ সংগ্রহ ও ডেলিভারি", en: "Medicine collection & home delivery as per prescription" },
-                    { icon: "monitor", bn: "ঔষধ সেবনের দৈনন্দিন পর্যবেক্ষণ", en: "Daily monitoring of medicine intake" },
-                    { icon: "reminder", bn: "সময়মতো সেবনের স্মার্ট রিমাইন্ডার", en: "Smart reminders for timely consumption" },
-                    { icon: "refill", bn: "ঔষধ শেষ হওয়ার আগেই রিফিল ব্যবস্থা", en: "Proactive refill before medicines run out" }
+                    { icon: "file", bn: "প্রেসক্রিপশন অনুযায়ী প্রয়োজনীয় ঔষধের চাহিদা নির্ধারণে সহায়তা।", en: "Assistance in identifying required medications based on prescriptions." },
+                    { icon: "delivery", bn: "নির্ভরযোগ্য ফার্মেসি থেকে প্রয়োজনীয় ঔষধ সংগ্রহ এবং দ্রুততম সময়ে আপনার ঠিকানায় পৌঁছে দেওয়ার সুব্যবস্থা।", en: "Collection of medicines from reliable pharmacies and timely delivery to the patient’s address." },
+                    { icon: "clock", bn: "প্রেসক্রিপশন অনুযায়ী সঠিক নিয়মে ঔষধ সেবন নিশ্চিতকরণে নিয়মিত পর্যবেক্ষণ সহায়তা।", en: "Support in ensuring medications are taken correctly according to prescription guidelines." },
+                    { icon: "phone", bn: "প্রয়োজনে চিকিৎসকের সাথে যোগাযোগ করে ঔষধ সংক্রান্ত পরামর্শ বা পরিবর্তনের সমন্বয় করা।", en: "Coordination with doctors when medication adjustments or advice are needed." }
                 ],
-                steps: [
-                    { bn: "প্রেসক্রিপশনের ছবি বা তালিকা পাঠান", en: "Send us a photo or list of the prescription" },
-                    { bn: "আমরা ঔষধ সংগ্রহ করে বাড়িতে পৌঁছে দেব", en: "We procure and deliver medicines to their home" },
-                    { bn: "কেয়ারগিভার নিশ্চিত করবে সঠিক সময়ে সেবন হচ্ছে", en: "Caregiver ensures medicines are taken at right times" },
-                    { bn: "পরিবারকে নিয়মিত আপডেট জানানো হবে", en: "Regular updates are shared with the family" }
-                ]
+                steps: []
             }
         },
         {
             id: 4,
             icon: "Ambulance",
-            title: { bn: "জরুরি পরিস্থিতি সেবা", en: "Emergency Services" },
+            title: { bn: "জরুরি পরিস্থিতি সংক্রান্ত সেবা", en: "Emergency Support Services" },
             image: "https://images.unsplash.com/photo-1587559070757-f72a388edbba?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "সার্বিক তত্ত্বাবধান ও সমন্বয়, অ্যাম্বুলেন্স ব্যবস্থা, হাসপাতালে ভর্তি সহায়তা ও অ্যাটেনডেন্ট সেবা প্রদান।", 
-                en: "Overall supervision and coordination, ambulance arrangements, hospital admission assistance, and attendant services." 
+                bn: "জরুরি পরিস্থিতিতে রোগীর অবস্থা মূল্যায়ন করে দ্রুত প্রয়োজনীয় সহায়তা ও সমন্বয়ের ব্যবস্থা করা।", 
+                en: "Assessment of patient condition in emergency situations and arrangement of immediate assistance." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "সংকটের মুহূর্তে, আমরাই আপনার প্রথম ভরসা।", en: "In a crisis, we are your very first call." },
+                tagline: { bn: "সংকটের মুহূর্তে আপনার প্রথম ভরসা", en: "Your first call in a crisis" },
                 benefits: [
-                    { icon: "ambulance", bn: "দ্রুত অ্যাম্বুলেন্স সমন্বয়", en: "Rapid ambulance coordination" },
-                    { icon: "admit", bn: "হাসপাতালে ভর্তি ও ডকুমেন্টেশন সহায়তা", en: "Hospital admission & documentation support" },
-                    { icon: "attendant", bn: "অ্যাটেনডেন্ট সহায়তা সেবা", en: "Professional attendant service during emergency" },
-                    { icon: "update", bn: "পরিবারকে রিয়েল-টাইম আপডেট", en: "Real-time family updates during crisis" }
+                    { icon: "activity", bn: "জরুরি পরিস্থিতিতে রোগীর অবস্থা মূল্যায়ন করে দ্রুত প্রয়োজনীয় সহায়তা ও সমন্বয়ের ব্যবস্থা করা।", en: "Assessment of patient condition in emergency situations and arrangement of immediate assistance." },
+                    { icon: "ambulance", bn: "প্রয়োজন অনুযায়ী দ্রুত অ্যাম্বুলেন্সের ব্যবস্থা করা।", en: "Arrangement of ambulance services when required." },
+                    { icon: "escort", bn: "রোগীকে দ্রুত ও নিরাপদে হাসপাতালে নিয়ে যাওয়ার জন্য প্রয়োজনীয় সহায়তা প্রদান।", en: "Support in safely transporting the patient to hospital." },
+                    { icon: "file", bn: "হাসপাতালে দ্রুত ভর্তি প্রক্রিয়ায় সহায়তা করা।", en: "Assistance with hospital admission procedures." },
+                    { icon: "users", bn: "জরুরি চিকিৎসা সেবার পুরো প্রক্রিয়ায় সার্বিক তত্ত্বাবধান ও সমন্বয় করা।", en: "Overall coordination and supervision throughout emergency treatment processes." },
+                    { icon: "user", bn: "রোগীর প্রয়োজন অনুযায়ী অ্যাটেনডেন্ট সেবা প্রদান করা।", en: "Provision of attendant support when needed." },
+                    { icon: "phone", bn: "রোগীর পরিবারের সদস্যদের প্রয়োজনীয় তথ্য ও রোগীর বর্তমান অবস্থা সম্পর্কে নিয়মিত অবহিতকরন সেবা।", en: "Regular updates to family members regarding the patient’s condition." }
                 ],
-                steps: [
-                    { bn: "আমাদের ইমার্জেন্সি হটলাইনে কল করুন", en: "Call our 24/7 emergency hotline immediately" },
-                    { bn: "আমাদের টিম দ্রুত পরিস্থিতি মূল্যায়ন করবে", en: "Our team rapidly assesses the situation" },
-                    { bn: "অ্যাম্বুলেন্স ও মেডিকেল সাপোর্ট পাঠানো হবে", en: "Ambulance & medical support is dispatched" },
-                    { bn: "হাসপাতালে ভর্তি সম্পন্ন হওয়া পর্যন্ত আমরা সঙ্গে থাকব", en: "We stay until full hospital admission is complete" }
-                ]
+                steps: []
             }
         },
         {
             id: 5,
             icon: "ShoppingBag",
-            title: { bn: "দৈনন্দিন প্রয়োজন সেবা", en: "Daily Needs Services" },
+            title: { bn: "দৈনন্দিন প্রয়োজন-সংক্রান্ত সেবা", en: "Daily Living Assistance Services" },
             image: "https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "বাজার করা, আত্মীয়ের বাড়ি, মার্কেট ও ব্যাংকে যাতায়াত বা ঘোরাফেরায় পরিবহন ও সহকারীসহ সহায়তা প্রদান।", 
-                en: "Grocery shopping, transport & assistant support for visiting relatives, markets, banks, or casual outings." 
+                bn: "দৈনন্দিন প্রয়োজনীয় বাজার বা কেনাকাটা করতে সহায়তা প্রদান।", 
+                en: "Assistance with daily shopping or necessary purchases." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "দৈনন্দিন ছোট প্রয়োজনে, একজন বিশ্বস্ত সঙ্গী।", en: "A trusted companion for every daily need." },
+                tagline: { bn: "আপনার দৈনন্দিন প্রয়োজনে সঙ্গী", en: "A companion for your daily needs" },
                 benefits: [
-                    { icon: "shopping", bn: "বাজার ও প্রয়োজনীয় কেনাকাটায় সহায়তা", en: "Assistance with grocery & essential shopping" },
-                    { icon: "transport", bn: "ব্যাংক, মার্কেট ও আত্মীয় বাড়িতে নিরাপদ যাতায়াত", en: "Safe transport to bank, market & relatives" },
-                    { icon: "verified", bn: "ব্যাকগ্রাউন্ড-চেকড সহকারী", en: "Background-checked & verified assistants" },
-                    { icon: "independence", bn: "স্বাধীনতা ও স্বনির্ভরতা বজায় রাখতে সহায়তা", en: "Helping maintain independence & mobility" }
+                    { icon: "shopping", bn: "দৈনন্দিন প্রয়োজনীয় বাজার বা কেনাকাটা করতে সহায়তা প্রদান।", en: "Assistance with daily shopping or necessary purchases." },
+                    { icon: "home", bn: "আত্মীয়-স্বজনের বাড়ি বা পরিচিতদের কাছে যাতায়াতের জন্য সহায়তা করা।", en: "Support for visiting relatives or acquaintances when required." },
+                    { icon: "car", bn: "মার্কেট, শপিং মল বা অন্যান্য প্রয়োজনীয় স্থানে যাতায়াতের ব্যবস্থা করা।", en: "Arrangement of transportation to markets, shopping malls, or other necessary places." },
+                    { icon: "building", bn: "ব্যাংক, আর্থিক প্রতিষ্ঠান বা প্রয়োজনীয় অফিসে যাওয়ার জন্য সহায়তা প্রদান।", en: "Assistance with visits to banks, financial institutions, or important offices." },
+                    { icon: "shield", bn: "নিরাপদ যাতায়াতের জন্য প্রয়োজন অনুযায়ী পরিবহনের ব্যবস্থা করা।", en: "Arrangement of safe transportation as needed." },
+                    { icon: "user", bn: "প্রয়োজনে সার্বিক সহযোগিতা ও তত্ত্বাবধানে আন্তরিক ও নির্ভরযোগ্য অ্যাটেনডেন্ট সেবা প্রদান।", en: "Providing reliable attendants for daily support and supervision when required." }
                 ],
-                steps: [
-                    { bn: "প্রয়োজনের তালিকা বা গন্তব্য জানান", en: "Share the list of needs or destination" },
-                    { bn: "আমরা উপযুক্ত সহকারী নির্ধারণ করব", en: "We assign the right verified assistant" },
-                    { bn: "নির্ধারিত সময়ে সহকারী প্রিয়জনের কাছে পৌঁছাবে", en: "Assistant arrives at the scheduled time" },
-                    { bn: "কাজ সম্পন্ন হয়ে প্রিয়জনকে নিরাপদে ঘরে ফিরিয়ে দেওয়া হবে", en: "Task completed & loved one returned home safely" }
-                ]
+                steps: []
             }
         },
         {
             id: 6,
             icon: "HeartHandshake",
-            title: { bn: "মানসিক সঙ্গ ও সুস্থতা সেবা", en: "Companionship & Wellness" },
+            title: { bn: "মানসিক সঙ্গ ও সুস্থতা সংক্রান্ত সেবা", en: "Emotional Companionship & Well-being Support" },
             image: "https://images.unsplash.com/photo-1529156069898-49953eb1f5ce?auto=format&fit=crop&q=80&w=800",
             description: { 
-                bn: "সঙ্গ দেওয়া ও গল্প করা, বই বা পত্রিকা পড়ে শোনানো, কাউন্সেলিং এবং মানসিক প্রফুল্লতা বজায় রাখতে সহায়তা প্রদান।", 
-                en: "Providing companionship & conversation, reading books, counseling, and helping maintain mental cheerfulness." 
+                bn: "রোগী বা প্রবীণ ব্যক্তির সাথে সময় কাটানো, সঙ্গ দেওয়া ও গল্প করা।", 
+                en: "Spending quality time with elderly individuals or patients, offering companionship and conversation." 
             },
             extended: {
                 videoUrl: "",
-                tagline: { bn: "বার্ধক্যের একাকীত্বে, একজন আন্তরিক বন্ধু।", en: "In the loneliness of old age, a genuinely caring friend." },
+                tagline: { bn: "মানসিক প্রফুল্লতার জন্য একজন বন্ধু", en: "A friend for emotional well-being" },
                 benefits: [
-                    { icon: "company", bn: "গল্প করা ও মানসম্পন্ন সময় কাটানো", en: "Meaningful conversation & quality companionship" },
-                    { icon: "reading", bn: "বই, পত্রিকা পড়ে শোনানো", en: "Reading books, newspapers aloud to them" },
-                    { icon: "counseling", bn: "পেশাদার কাউন্সেলিং সংযোগ", en: "Connection to professional counseling" },
-                    { icon: "hobby", bn: "শখ ও আগ্রহভিত্তিক কার্যক্রমে সহায়তা", en: "Support for hobbies & interest-based activities" }
+                    { icon: "heart", bn: "রোগী বা প্রবীণ ব্যক্তির সাথে সময় কাটানো, সঙ্গ দেওয়া ও গল্প করা।", en: "Spending quality time with elderly individuals or patients, offering companionship and conversation." },
+                    { icon: "book", bn: "বই, পত্রিকা বা অন্যান্য পড়ার উপকরণ পড়ে শোনানো।", en: "Reading books, newspapers, or other materials aloud when needed." },
+                    { icon: "users", bn: "প্রয়োজনে কাউন্সেলিং বা মানসিক সহায়তার ব্যবস্থা করা।", en: "Arranging counseling or emotional support services if required." },
+                    { icon: "sun", bn: "নিয়মিত আন্তরিক আলাপচারিতা ও সহায়ক কার্যক্রমের মাধ্যমে একাকীত্ব কমানো এবং মানসিক স্বস্তি ও প্রফুল্লতা বজায় রাখতে সহায়তা।", en: "Helping reduce loneliness through regular communication and supportive engagement, promoting emotional comfort and positivity." }
                 ],
-                steps: [
-                    { bn: "প্রিয়জনের পছন্দ ও ব্যক্তিত্ব সম্পর্কে আমাদের জানান", en: "Tell us about their personality & preferences" },
-                    { bn: "আমরা সর্বোচ্চ মানানসই একজন কম্পেনিয়ন নির্বাচন করব", en: "We match them with the most suitable companion" },
-                    { bn: "নির্ধারিত সময়ে কম্পেনিয়ন তাদের সঙ্গে থাকবে", en: "Companion visits at scheduled times" },
-                    { bn: "পরিবারকে নিয়মিত মানসিক স্বাস্থ্যের আপডেট দেওয়া হবে", en: "Family receives regular mental wellness updates" }
-                ]
+                steps: []
             }
         }
     ]
@@ -310,48 +282,55 @@ export const processData = {
 // ───── Why Choose Us ───────────────────────────────────────────────────────
 
 export const whyChooseData = {
-    badge: { bn: "কেন আমরা আলাদা?", en: "Why Choose Us?" },
-    title: { bn: "কেন নির্ভার কেয়ার আপনার প্রিয়জনের জন্য সেরা পছন্দ?", en: "Why Nirvaar Care is the Best Choice for Your Loved Ones?" },
+    badge: { bn: "আমরা যেমন", en: "Our Promise" },
+    title: { bn: "আপনার প্রিয়জনের নিরাপত্তা আমাদের প্রতিশ্রুতি", en: "Caring Hands You Can Trust" },
+    subtitle: { 
+        bn: "", 
+        en: "" 
+    },
+    listTitle: { bn: "যেসব বিষয়ে আমরা সর্বোচ্চ গুরুত্ব দিয়ে থাকি", en: "What We Prioritize" },
     features: [
         {
             id: 1,
             icon: "ShieldCheck",
             image: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=800",
-            title: { bn: "প্রশিক্ষিত ও বিশ্বস্ত কেয়ারগিভার", en: "Trained & Trusted Caregivers" },
-            description: { 
-                bn: "আমাদের কর্মীরা ব্যাকগ্রাউন্ড-চেকড এবং বিশেষায়িত কেয়ারগিভিং ট্রেনিং প্রাপ্ত, যা আপনার প্রিয়জনের সুরক্ষা নিশ্চিত করে।", 
-                en: "Our staff are background-checked and have received specialized caregiving training to ensure safety." 
-            }
+            title: { bn: "যাচাইকৃত ও দায়িত্বশীল কেয়ারগিভার", en: "Careful selection of verified and responsible caregivers" },
+            description: { bn: "", en: "" }
         },
         {
             id: 2,
             icon: "ActivityPulse",
             image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
-            title: { bn: "ডাক্তারের সার্বক্ষণিক সরাসরি নজরদারি", en: "Continuous Doctor Supervision" },
-            description: { 
-                bn: "প্রতিটি কেয়ার প্ল্যান ও রোগীর প্রগ্রেস সরাসরি আমাদের বিশেষজ্ঞ চিকিৎসকরা মনিটর করেন, কোনো আপস ছাড়াই।", 
-                en: "Every care plan and patient progress is directly monitored by our expert physicians without compromise." 
-            }
+            title: { bn: "প্রয়োজন অনুযায়ী প্রশিক্ষণ ও দক্ষতা", en: "Ensuring necessary training and practical caregiving skills" },
+            description: { bn: "", en: "" }
         },
         {
             id: 3,
             icon: "Eye",
             image: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&q=80&w=800",
-            title: { bn: "শতভাগ স্বচ্ছতা ও নিয়মিত আপডেট", en: "100% Transparency & Updates" },
-            description: { 
-                bn: "রোগীর প্রতিদিনের অবস্থা, ওষুধ এবং ভাইটালস-এর ডিজিটাল আপডেট পরিবারকে নিয়মিত জানানো হয়।", 
-                en: "Families receive daily digital updates on the patient's condition, medications, and vitals regularly." 
-            }
+            title: { bn: "ভদ্র, সহানুভূতিশীল ও সম্মানজনক আচরণ", en: "Polite, respectful, and compassionate behavior" },
+            description: { bn: "", en: "" }
         },
         {
             id: 4,
             icon: "Clock",
             image: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&q=80&w=800",
-            title: { bn: "২৪/৭ ইমার্জেন্সি সাপোর্ট", en: "24/7 Emergency Support" },
-            description: { 
-                bn: "যেকোনো জরুরি স্বাস্থ্য পরিস্থিতিতে আমাদের রেসকিউ ও মেডিকেল সাপোর্ট টিম সবসময় প্রস্তুত থাকে।", 
-                en: "Our rescue and medical support team is always ready for any emergency health situation, day or night." 
-            }
+            title: { bn: "পরিবারের সাথে স্বচ্ছ যোগাযোগ", en: "Transparent and regular communication with family members" },
+            description: { bn: "", en: "" }
+        },
+        {
+            id: 5,
+            icon: "Heart",
+            image: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&q=80&w=800",
+            title: { bn: "নিরাপত্তা, মর্যাদা ও গোপনীয়তা রক্ষা", en: "Protection of the patient’s safety, dignity, and privacy" },
+            description: { bn: "", en: "" }
+        },
+        {
+            id: 6,
+            icon: "Activity",
+            image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
+            title: { bn: "প্রয়োজন হলে দ্রুত সহায়তা ও পরিবর্তনের ব্যবস্থা", en: "Quick coordination and assistance in emergency situations" },
+            description: { bn: "", en: "" }
         }
     ]
 };
