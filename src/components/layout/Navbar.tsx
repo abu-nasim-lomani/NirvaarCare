@@ -369,7 +369,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                                                 {lang === "en" ? "Login / Register" : "লগিন / নিবন্ধন"}
                                             </button>
                                             <motion.a
-                                                href={content.emergencyUrl || "tel:+8801700000000"}
+                                                href={content.emergencyUrl || "tel:+8801715599599"}
                                                 whileTap={{ scale: 0.97 }}
                                                 className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-emerald-600/20"
                                             >

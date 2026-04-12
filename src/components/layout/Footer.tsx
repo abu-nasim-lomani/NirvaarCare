@@ -11,14 +11,14 @@ import { useSiteConfig } from "@/context/SiteConfigContext";
 const FacebookIcon = ({ size = 24 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
 );
-const TwitterIcon = ({ size = 24 }: { size?: number }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-);
 const InstagramIcon = ({ size = 24 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
 );
-const LinkedinIcon = ({ size = 24 }: { size?: number }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+const YoutubeIcon = ({ size = 24 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 7.1c-.4 1.5-1.1 3.2-1.1 4.9s.7 3.4 1.1 4.9c.4 1.5 1.7 2.8 3.2 3.2 1.8.5 5.2.7 6.3.7s4.5-.2 6.3-.7c1.5-.4 2.8-1.7 3.2-3.2.4-1.5 1.1-3.2 1.1-4.9s-.7-3.4-1.1-4.9c-.4-1.5-1.7-2.8-3.2-3.2C16.5 3.2 13.1 3 12 3s-4.5.2-6.3.7C4.2 4.3 2.9 5.6 2.5 7.1z"/><polygon points="9.8 15.5 15.8 12 9.8 8.5 9.8 15.5"/></svg>
+);
+const WhatsappIcon = ({ size = 24 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
 );
 
 export default function Footer({ data }: { data?: any }) {
@@ -37,6 +37,13 @@ export default function Footer({ data }: { data?: any }) {
         MapPin
     };
 
+    const socialLinks = [
+        { Icon: FacebookIcon, href: "https://www.facebook.com/nirvaarcare" },
+        { Icon: InstagramIcon, href: "https://www.instagram.com/nirvaarcare" },
+        { Icon: YoutubeIcon, href: "https://www.youtube.com/@NirvaarCare" },
+        { Icon: WhatsappIcon, href: "https://wa.me/8801715599599" },
+    ];
+
     return (
         <footer className="relative bg-gray-100 dark:bg-slate-950 text-gray-600 dark:text-slate-300 overflow-hidden pt-24 pb-8 border-t border-gray-200 dark:border-slate-900/50">
             
@@ -46,7 +53,7 @@ export default function Footer({ data }: { data?: any }) {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Main Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 mb-16">
                     
                     {/* Brand Column */}
                     <motion.div 
@@ -75,41 +82,18 @@ export default function Footer({ data }: { data?: any }) {
                         </p>
 
                         <div className="flex items-center gap-4">
-                            {[FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon].map((Icon, idx) => (
+                            {socialLinks.map(({ Icon, href }, idx) => (
                                 <a 
                                     key={idx}
-                                    href="#" 
+                                    href={href} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:text-white hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] hover:-translate-y-1"
                                 >
                                     <Icon size={18} />
                                 </a>
                             ))}
                         </div>
-                    </motion.div>
-
-                    {/* Quick Links */}
-                    <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                    >
-                        <h3 className="text-gray-900 dark:text-white font-semibold text-sm mb-5">
-                            {lang === "en" ? content.quickLinks?.title?.en : content.quickLinks?.title?.bn}
-                        </h3>
-                        <ul className="space-y-3">
-                            {content.quickLinks?.links?.map((link: any, idx: number) => (
-                                <li key={idx}>
-                                    <Link 
-                                        href={link.href}
-                                        className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-300 group"
-                                    >
-                                        <ArrowRight size={14} className="opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
-                                        {lang === "en" ? link.en : link.bn}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
                     </motion.div>
 
                     {/* Contact Info */}
@@ -141,33 +125,7 @@ export default function Footer({ data }: { data?: any }) {
                         </ul>
                     </motion.div>
 
-                    {/* Newsletter */}
-                    <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                    >
-                        <h3 className="text-gray-900 dark:text-white font-semibold text-sm mb-4">
-                            {lang === "en" ? "Newsletter" : "নিউজলেটার"}
-                        </h3>
-                        <p className="text-gray-500 dark:text-slate-400 text-xs mb-4">
-                            {lang === "en" ? "Subscribe to our newsletter for health tips and latest updates." : "স্বাস্থ্য বিষয়ক টিপস এবং সর্বশেষ আপডেট পেতে আমাদের নিউজলেটার সাবস্ক্রাইব করুন।"}
-                        </p>
-                        <form className="relative" onSubmit={(e) => e.preventDefault()}>
-                            <input 
-                                type="email" 
-                                placeholder={lang === "en" ? "Your email address" : "আপনার ইমেইল অ্যাড্রেস"}
-                                className="w-full bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-800 rounded-full px-6 py-4 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all pr-14"
-                            />
-                            <button 
-                                type="submit"
-                                className="absolute right-2 top-2 bottom-2 w-10 flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)]"
-                            >
-                                <ArrowRight size={18} />
-                            </button>
-                        </form>
-                    </motion.div>
+
 
                 </div>
 
@@ -179,11 +137,7 @@ export default function Footer({ data }: { data?: any }) {
                     transition={{ duration: 0.5, delay: 0.5 }}
                     className="pt-8 border-t border-gray-200 dark:border-slate-800/80 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 dark:text-slate-500 text-sm"
                 >
-                    <p>{lang === "en" ? content.copyright?.en : content.copyright?.bn}</p>
-                    <div className="flex gap-6">
-                        <Link href="#" className="hover:text-emerald-400 transition-colors">{lang === "en" ? "Privacy Policy" : "প্রাইভেসি পলিসি"}</Link>
-                        <Link href="#" className="hover:text-emerald-400 transition-colors">{lang === "en" ? "Terms of Service" : "শর্তাবলী"}</Link>
-                    </div>
+                    <p className="w-full text-center">{lang === "en" ? content.copyright?.en : content.copyright?.bn}</p>
                 </motion.div>
 
             </div>

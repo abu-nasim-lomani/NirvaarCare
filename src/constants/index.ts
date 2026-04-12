@@ -343,8 +343,8 @@ export const emergencyCtaData = {
         bn: "আমাদের ইমার্জেন্সি রেসপন্স টিম ২৪/৭ প্রস্তুত। অ্যাম্বুলেন্স, অক্সিজেন বা জরুরি নার্সিং সেবার জন্য এখনই কল করুন।", 
         en: "Our emergency response team is available 24/7. Call us now for ambulance, oxygen, or urgent nursing care." 
     },
-    buttonText: { bn: "কল করুন: +৮৮০ ১৭০০-০০০০০০", en: "Call Now: +880 1700-000000" },
-    phone: "+8801700000000"
+    buttonText: { bn: "কল করুন: +৮৮০ ০১৭১৫-৫৯৯ ৫৯৯", en: "Call Now: 01715-599599" },
+    phone: "+8801715599599"
 };
 
 // ───── Footer ──────────────────────────────────────────────────────────────
@@ -366,7 +366,7 @@ export const footerData = {
     contactInfo: {
         title: { bn: "যোগাযোগ", en: "Contact Info" },
         items: [
-            { icon: "Phone", text: "+880 1700-000000" },
+            { icon: "Phone", text: "01715-599599" },
             { icon: "Mail", text: "support@nirvaarcare.com" },
             { icon: "MapPin", text: { bn: "গুলশান ১, ঢাকা, বাংলাদেশ", en: "Gulshan 1, Dhaka, Bangladesh" } },
         ]
@@ -475,7 +475,7 @@ export const heroSlides: HeroSlide[] = [
         trust:    { bn: "⚡ ইমার্জেন্সি রেসপন্স প্রটোকল · অভিজ্ঞ টিম", en: "⚡ Emergency Response Protocol · Expert Team" },
         headline: { bn: "যেকোনো মেডিকেল ইমার্জেন্সিতে\nআপনার প্রথম ভরসা।", en: "Your first line of defense\nin any medical crisis." },
         sub:      { bn: "অ্যাম্বুলেন্স ডাকা থেকে হাসপাতালে ভর্তি এবং প্রথম মুহূর্তের ব্যবস্থাপনা—সংকটময় সময়ে আমরা নেবো দ্রুততম ও সঠিক সিদ্ধান্ত।", en: "From arranging ambulances to hospital admission and critical initial care—we take swift, structured action when seconds matter." },
-        primaryCTA:   { bn: "জরুরি হটলাইন",      en: "Emergency Hotline",  href: "tel:+8801700000000" },
+        primaryCTA:   { bn: "জরুরি হটলাইন",      en: "Emergency Hotline",  href: "tel:+8801715599599" },
         secondaryCTA: { bn: "আমাদের সক্ষমতা", en: "Our Capabilities", href: "#ambulance"        },
     },
     {
