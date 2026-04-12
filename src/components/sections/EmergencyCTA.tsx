@@ -10,7 +10,7 @@ export default function EmergencyCTA({ data }: { data?: any }) {
     const content = data && Object.keys(data).length > 0 ? data : emergencyCtaData;
 
     return (
-        <section id="contact" className="relative py-16 md:py-20 bg-emerald-50 dark:bg-emerald-900 overflow-hidden">
+        <section id="emergency" className="relative py-16 md:py-20 bg-emerald-50 dark:bg-emerald-900 overflow-hidden">
             {/* Dark/Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-100/80 to-teal-50/80 dark:from-emerald-950/90 dark:to-slate-950/90 z-0"></div>
             
