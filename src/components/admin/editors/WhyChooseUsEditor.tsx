@@ -20,6 +20,7 @@ interface WhyChooseUsData {
     badge?: LangString;
     title?: LangString;
     subtitle?: LangString;
+    listTitle?: LangString;
     features?: Feature[];
 }
 
@@ -128,6 +129,46 @@ export default function WhyChooseUsEditor({ localData, setLocalData }: Props) {
                         />
                     </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {/* Subtitle */}
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase">Description / Subtitle</label>
+                        <textarea
+                            rows={4}
+                            placeholder="English Subtitle"
+                            value={data.subtitle?.en || ""}
+                            onChange={(e) => updateGlobalProp("subtitle", "en", e.target.value)}
+                            className="w-full text-sm border rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                        <textarea
+                            rows={4}
+                            placeholder="Bengali Subtitle"
+                            value={data.subtitle?.bn || ""}
+                            onChange={(e) => updateGlobalProp("subtitle", "bn", e.target.value)}
+                            className="w-full text-sm border rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                    </div>
+
+                    {/* List Title */}
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase">List Title</label>
+                        <textarea
+                            rows={2}
+                            placeholder="English List Title"
+                            value={data.listTitle?.en || ""}
+                            onChange={(e) => updateGlobalProp("listTitle", "en", e.target.value)}
+                            className="w-full text-sm border rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                        <textarea
+                            rows={2}
+                            placeholder="Bengali List Title"
+                            value={data.listTitle?.bn || ""}
+                            onChange={(e) => updateGlobalProp("listTitle", "bn", e.target.value)}
+                            className="w-full text-sm border rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                        />
+                    </div>
+                </div>
             </div>
 
             {/* Features Editor */}
@@ -151,8 +192,8 @@ export default function WhyChooseUsEditor({ localData, setLocalData }: Props) {
                             key={idx}
                             onClick={() => setActiveIdx(idx)}
                             className={`shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeIdx === idx
-                                    ? "bg-emerald-600 text-white shadow-md"
-                                    : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                                ? "bg-emerald-600 text-white shadow-md"
+                                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
                                 }`}
                         >
                             Feature {idx + 1}
