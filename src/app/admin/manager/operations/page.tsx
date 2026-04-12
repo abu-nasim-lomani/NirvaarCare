@@ -31,6 +31,8 @@ type Task = {
         requester_name: string;
         requester_phone?: string;
         scheduled_at?: string;
+        has_transport?: boolean;
+        report_type?: string;
         booking_data: Record<string, any>;
     };
     sample_entries: any[];
