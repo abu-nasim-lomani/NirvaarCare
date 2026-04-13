@@ -129,7 +129,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
         ? servicesSection!.content_data
         : servicesData;
 
-    const service = cmsServicesData?.items?.find((s: any) => String(s.id) === String(id)) 
+    const service = cmsServicesData?.items?.find((s: any) => String(s.id) === String(id))
         || servicesData.items.find((s: any) => String(s.id) === String(id));
 
     // In case the DB was saved before we added extended properties, fallback to constants
@@ -215,7 +215,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                             {/* Hero CTAs */}
                             <div className="flex flex-wrap gap-3 mt-8">
                                 <a
-                                    href="tel:+8801700000000"
+                                    href="tel:+8801715599599"
                                     className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-1 hover:shadow-emerald-500/40 text-base border border-transparent"
                                 >
                                     <PhoneCall size={18} />
@@ -351,7 +351,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                     </p>
                                     <div className="flex flex-col gap-3">
                                         <a
-                                            href="tel:+8801700000000"
+                                            href="tel:+8801715599599"
                                             className="w-full flex items-center justify-center gap-2 bg-white text-emerald-700 font-bold py-3.5 px-6 rounded-xl hover:bg-emerald-50 transition-all shadow-md"
                                         >
                                             <PhoneCall size={18} />
@@ -476,7 +476,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                         {lang === "en" ? (d1?.whoIsItFor?.expatsCallout?.descEn || "You don't need to book a flight just to take your parents for a blood test. Our team handles everything.") : (d1?.whoIsItFor?.expatsCallout?.descBn || "বাবা–মার রক্ত পরীক্ষার জন্য দেশে ছুটে আসতে হবে না। আমাদের টিম সবকিছু সামলায়।")}
                                     </p>
                                 </div>
-                                <a href="tel:+8801700000000" className="shrink-0 flex items-center gap-2 bg-white text-emerald-700 font-bold px-6 py-3 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg">
+                                <a href="tel:+8801715599599" className="shrink-0 flex items-center gap-2 bg-white text-emerald-700 font-bold px-6 py-3 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg">
                                     <PhoneCall size={18} />
                                     {lang === "en" ? "Call Now" : "কল করুন"}
                                 </a>
@@ -778,7 +778,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                 ))}
 
                                 <a
-                                    href="tel:+8801700000000"
+                                    href="tel:+8801715599599"
                                     className="inline-flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-4 rounded-xl transition-all mt-4 shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 group"
                                 >
                                     <PhoneCall size={18} />
@@ -882,11 +882,11 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
-                                href="tel:+8801700000000"
+                                href="tel:+8801715599599"
                                 className="inline-flex items-center justify-center gap-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 text-lg"
                             >
                                 <PhoneCall size={22} />
-                                {lang === "en" ? "Call Now: +880 1700-000000" : "Call Now: +880 1700-000000"}
+                                {lang === "en" ? "Call Now: +880 1715599599" : "Call Now: +880 1715599599"}
                             </a>
                             <Link
                                 href="/#contact"
@@ -912,7 +912,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                         </p>
                     </div>
                     <a
-                        href="tel:+8801700000000"
+                        href="tel:+8801715599599"
                         className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all shrink-0 shadow-lg"
                     >
                         <PhoneCall size={16} />
@@ -970,7 +970,7 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
                                                 : "In the meantime, call us to learn more."}
                                         </p>
                                         <a
-                                            href="tel:+8801700000000"
+                                            href="tel:+8801715599599"
                                             className="inline-flex items-center gap-2 mt-6 bg-emerald-500 text-white font-semibold px-6 py-3 rounded-xl hover:bg-emerald-400 transition-all"
                                         >
                                             <PhoneCall size={18} />
