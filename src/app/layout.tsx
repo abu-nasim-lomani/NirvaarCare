@@ -15,8 +15,48 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-    title: "নির্ভার কেয়ার | Nirvaar Care",
-    description: "আপনার স্বাস্থ্য, আমাদের অগ্রাধিকার। উন্নত চিকিৎসাসেবা এবং নিরবচ্ছিন্ন যত্ন নিশ্চিত করতে আমরা আছি আপনার পাশে।",
+    title: "নির্ভার কেয়ার | Nirvaar Care - Professional Home Healthcare Services",
+    description: "Nirvaar Care provides professional home healthcare services in Bangladesh including home nursing, physiotherapy, diagnostic tests, and elderly care. Available 24/7. Call: +880 1715-599599",
+    keywords: ["nirvaar care", "nirvaarcare", "home healthcare bangladesh", "home nursing dhaka", "physiotherapy home service", "diagnostic test at home", "elderly care bangladesh", "নির্ভার কেয়ার", "হোম হেলথকেয়ার"],
+    authors: [{ name: "Nirvaar Care" }],
+    creator: "Nirvaar Care",
+    publisher: "Nirvaar Care",
+    metadataBase: new URL("https://www.nirvaarcare.com"),
+    alternates: {
+        canonical: "https://www.nirvaarcare.com",
+    },
+    openGraph: {
+        type: "website",
+        locale: "bn_BD",
+        url: "https://www.nirvaarcare.com",
+        siteName: "Nirvaar Care",
+        title: "Nirvaar Care - Professional Home Healthcare Services in Bangladesh",
+        description: "Professional home healthcare services including home nursing, physiotherapy, diagnostic tests, and elderly care. Available 24/7 in Bangladesh.",
+        images: [
+            {
+                url: "/og-image.png",
+                width: 1200,
+                height: 630,
+                alt: "Nirvaar Care - Home Healthcare Services",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Nirvaar Care - Professional Home Healthcare Services",
+        description: "Professional home healthcare services in Bangladesh. Available 24/7.",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+        },
+    },
+    verification: {
+        google: "", // Google Search Console verification code যুক্ত করতে হবে
+    },
 };
 
 export default function RootLayout({
