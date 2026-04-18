@@ -60,7 +60,7 @@ export default function WhyChooseUs({ data }: { data?: any }) {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}
-                    className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-800"
+                    className="bg-white dark:bg-gray-900 rounded-[1.5rem] md:rounded-[2.5rem] p-5 sm:p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-800"
                 >
                     <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
                         {lang === "en" ? content.listTitle?.en : content.listTitle?.bn}

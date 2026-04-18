@@ -13,7 +13,7 @@ export default function FrontendDashboardLayout({ children }: { children: React.
             <DashboardSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col relative w-full lg:w-[calc(100%-18rem)]">
+            <main className="flex-1 flex flex-col relative w-full min-w-0">
                 
                 {/* Mobile Topbar */}
                 <header className="lg:hidden flex items-center justify-between px-4 h-16 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">

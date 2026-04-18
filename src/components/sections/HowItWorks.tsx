@@ -88,7 +88,7 @@ export default function HowItWorks({ data }: { data?: any }) {
                             >
                                 {/* Connector line for Mobile/Tablet */}
                                 {idx !== content.steps?.length - 1 && (
-                                    <div className="lg:hidden absolute top-[88px] bottom-[-32px] left-1/2 w-[2px] bg-gradient-to-b from-emerald-500/50 to-transparent -translate-x-1/2 z-[-1]"></div>
+                                    <div className="lg:hidden absolute top-20 bottom-[-20px] left-1/2 w-[2px] bg-gradient-to-b from-emerald-500/50 to-transparent -translate-x-1/2 z-[-1]"></div>
                                 )}
 
                                 {/* Step Number & Icon Container */}

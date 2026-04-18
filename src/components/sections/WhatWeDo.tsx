@@ -59,7 +59,7 @@ export default function WhatWeDo({ data, hideButton = false }: { data?: any; hid
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.6, delay: 0.1 * idx }}
-                            className="text-gray-600 dark:text-gray-300 text-lg md:text-xl leading-relaxed md:leading-[1.8]"
+                            className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed md:leading-[1.8]"
                         >
                             {lang === "en" ? p.en : p.bn}
                         </motion.p>

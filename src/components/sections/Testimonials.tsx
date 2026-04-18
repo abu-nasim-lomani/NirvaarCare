@@ -65,11 +65,11 @@ export default function Testimonials({ data }: { data?: any }) {
                         <motion.div 
                             key={testimonial.id}
                             variants={cardVariants}
-                            className="bg-slate-50 dark:bg-gray-950 p-8 sm:p-10 rounded-[2rem] relative shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 dark:border-gray-800 flex flex-col group"
+                            className="bg-slate-50 dark:bg-gray-950 p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] relative shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 dark:border-gray-800 flex flex-col group"
                         >
                             {/* Decorative Quote Mark */}
-                            <div className="absolute top-8 right-8 text-emerald-200 dark:text-emerald-900/40 opacity-50 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
-                                <Quote size={60} strokeWidth={1} fill="currentColor" />
+                            <div className="absolute top-4 right-4 sm:top-8 sm:right-8 text-emerald-200 dark:text-emerald-900/40 opacity-50 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+                                <Quote size={36} strokeWidth={1} fill="currentColor" />
                             </div>
 
                             {/* Ratings */}

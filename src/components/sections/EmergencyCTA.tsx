@@ -100,7 +100,7 @@ export default function EmergencyCTA({ data }: { data?: any }) {
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {/* Name + Phone Row */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div className="relative">
                                         <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-400/60 pointer-events-none" />
                                         <input
@@ -231,7 +231,7 @@ export default function EmergencyCTA({ data }: { data?: any }) {
                                     <Mail size={16} />
                                 </div>
                                 <div>
-                                    <p className="text-gray-800 dark:text-white font-bold text-xs truncate">
+                                    <p className="text-gray-800 dark:text-white font-bold text-xs max-w-[120px] truncate">
                                         {content.supportEmail || "support@nirvaarcare.com"}
                                     </p>
                                     <p className="text-gray-400 dark:text-gray-500 text-xs">

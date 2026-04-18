@@ -24,7 +24,7 @@ export default function AboutUs({ data }: { data?: any }) {
                         className="w-full lg:w-5/12 h-full lg:sticky lg:top-32 self-start"
                     >
                         {/* Main large image */}
-                        <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] w-full rounded-3xl overflow-hidden shadow-2xl">
+                        <div className="relative h-[280px] sm:h-[420px] lg:h-[550px] w-full rounded-3xl overflow-hidden shadow-2xl">
                             <Image
                                 key={content.image1 || aboutData.image1}
                                 src={content.image1 || aboutData.image1}

@@ -241,7 +241,7 @@ export default function HeroSlider({
 
                                                 {/* Secondary */}
                                                 {slide.secondaryCTA?.en?.trim() && (
-                                                    <Link href={slide.secondaryCTA.href || "#"} className="hidden sm:block">
+                                                    <Link href={slide.secondaryCTA.href || "/"}>
                                                         <motion.span
                                                             whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.15)" }}
                                                             whileTap={{ scale: 0.97 }}
@@ -295,10 +295,11 @@ export default function HeroSlider({
                         href="tel:+8801700000000"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md text-white text-sm font-semibold hover:bg-white/20 transition-all"
+                        className="inline-flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md text-white text-xs sm:text-sm font-semibold hover:bg-white/20 transition-all"
                     >
                         <PhoneCall size={14} className="text-emerald-400" />
-                        {lang === "en" ? "Emergency Hotline" : "জরুরি হটলাইন"}
+                        <span className="hidden xs:inline sm:inline">{lang === "en" ? "Emergency Hotline" : "জরুরি হটলাইন"}</span>
+                        <span className="sm:hidden">{lang === "en" ? "Hotline" : "হটলাইন"}</span>
                     </motion.a>
                 </div>
             </div>

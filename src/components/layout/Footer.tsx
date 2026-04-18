@@ -152,24 +152,24 @@ export default function Footer({ data }: { data?: any }) {
                                 {lang === "en" ? office.name?.en : office.name?.bn}
                             </h3>
                             
-                            <div className="flex gap-4 items-center">
-                                <ul className="flex-1 space-y-4">
+                            <div className="flex flex-col gap-4">
+                                <ul className="space-y-3">
                                     {office.phone && (
-                                        <li className="flex items-start gap-3 text-gray-500 dark:text-slate-400 group/item">
-                                            <Phone size={16} className="mt-0.5 text-emerald-500 flex-shrink-0" />
+                                        <li className="flex items-center gap-3 text-gray-500 dark:text-slate-400 group/item">
+                                            <Phone size={15} className="text-emerald-500 flex-shrink-0" />
                                             <span className="text-sm font-medium group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400 transition-colors">{office.phone}</span>
                                         </li>
                                     )}
                                     {office.email && (
-                                        <li className="flex items-start gap-3 text-gray-500 dark:text-slate-400 group/item">
-                                            <Mail size={16} className="mt-0.5 text-emerald-500 flex-shrink-0" />
-                                            <span className="text-sm font-medium group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400 transition-colors break-words">{office.email}</span>
+                                        <li className="flex items-center gap-3 text-gray-500 dark:text-slate-400 group/item">
+                                            <Mail size={15} className="text-emerald-500 flex-shrink-0" />
+                                            <span className="text-sm font-medium group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400 transition-colors break-all">{office.email}</span>
                                         </li>
                                     )}
                                     {office.address && (
-                                        <li className="flex items-start gap-3 text-gray-500 dark:text-slate-400 group/item w-full">
-                                            <MapPin size={16} className="mt-0.5 text-emerald-500 flex-shrink-0" />
-                                            <span className="text-sm leading-relaxed group-hover/item:text-gray-800 dark:group-hover/item:text-slate-200 transition-colors pr-2">
+                                        <li className="flex items-start gap-3 text-gray-500 dark:text-slate-400 group/item">
+                                            <MapPin size={15} className="mt-0.5 text-emerald-500 flex-shrink-0" />
+                                            <span className="text-sm leading-relaxed group-hover/item:text-gray-800 dark:group-hover/item:text-slate-200 transition-colors">
                                                 {lang === "en" ? office.address.en : office.address.bn}
                                             </span>
                                         </li>
@@ -182,7 +182,7 @@ export default function Footer({ data }: { data?: any }) {
                                         href={office.mapUrl || "#"} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="block relative w-20 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 shrink-0 group/map ml-auto"
+                                        className="block relative w-full h-32 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 group/map"
                                     >
                                         <iframe 
                                             src={extractIframeSrc(office.mapEmbedUrl)} 

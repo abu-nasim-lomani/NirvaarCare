@@ -292,7 +292,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                             whileTap={{ scale: 0.92 }}
                             onClick={() => setIsOpen(!isOpen)}
                             className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors duration-200 ${
-                                scrolled
+                                effectiveScrolled && !isPreview
                                     ? "bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400"
                                     : "bg-white/10 hover:bg-white/20 text-white"
                             }`}
@@ -311,7 +311,7 @@ export default function Navbar({ data, isPreview = false }: { data?: any, isPrev
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="md:hidden bg-white dark:bg-gray-950 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 overflow-hidden"
+                        className="xl:hidden bg-white dark:bg-gray-950 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 overflow-hidden"
                     >
                         <div className="px-4 pt-3 pb-6 space-y-1">
                             {!isLoading && navItems.map((link, index) => (

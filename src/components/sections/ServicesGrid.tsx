@@ -74,7 +74,7 @@ export default function ServicesGrid({ data }: { data?: any }) {
                             <motion.div 
                                 key={service.id}
                                 variants={cardVariants}
-                                className="group relative h-auto min-h-[180px] sm:min-h-[200px] rounded-[1.5rem] overflow-hidden bg-white dark:bg-slate-900 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-500/50 flex flex-col"
+                                className="group relative h-full min-h-[180px] sm:min-h-[200px] rounded-[1.5rem] overflow-hidden bg-white dark:bg-slate-900 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-500/50 flex flex-col"
                             >
                                 {/* Glowing Ambient Orb (Abstract Design) */}
                                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-100 dark:bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-200 dark:group-hover:bg-emerald-400/30 group-hover:scale-150 transition-all duration-700 ease-in-out"></div>

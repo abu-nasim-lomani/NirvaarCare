@@ -77,8 +77,8 @@ export default function DashboardSidebar({
             {/* Sidebar */}
             <aside
                 className={`
-                    self-start fixed lg:sticky lg:top-20 left-0 z-40 h-[100dvh] lg:h-[calc(100vh-5rem)] bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300 ease-in-out shadow-2xl lg:shadow-none
-                    ${isOpen ? "w-72 translate-x-0 top-0 z-50" : "w-72 -translate-x-full lg:w-72 lg:translate-x-0"}
+                    self-start fixed lg:sticky lg:top-20 left-0 z-40 h-[100dvh] lg:h-[calc(100vh-5rem)] bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300 ease-in-out shadow-2xl lg:shadow-none overflow-hidden
+                    ${isOpen ? "w-72 translate-x-0 top-0 z-50" : "w-0 lg:w-72 -translate-x-full lg:translate-x-0"}
                 `}
             >
                 {/* User Welcome Area instead of Logo */}
