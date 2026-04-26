@@ -3,7 +3,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { LayoutDashboard, Settings2, Home, LogOut, Menu, X, Inbox, Users, Building2, ShieldAlert, Activity, FlaskConical } from "lucide-react";
+import { LayoutDashboard, Settings2, Home, LogOut, Menu, X, Inbox, Users, Building2, ShieldAlert, Activity, FlaskConical, ShoppingCart, Package, Tags } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 // NOTE: The layout uses self-contained sticky sidebar + scrollable main.
@@ -123,6 +123,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                             </Link>
                             <Link href="/admin/services/diagnostic" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium ml-8 border-l-2 border-emerald-100 dark:border-emerald-900 text-sm">
                                 <FlaskConical size={14} /> Diagnostic Service CMS
+                            </Link>
+                            <Link href="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium">
+                                <Package size={20} /> Manage E-Commerce
+                            </Link>
+                            <Link href="/admin/categories" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium ml-4 border-l-2 border-emerald-100 dark:border-emerald-900 text-sm">
+                                <Tags size={16} /> Product Categories
                             </Link>
                         </>
                     )}

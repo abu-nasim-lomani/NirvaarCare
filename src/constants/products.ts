@@ -7,7 +7,9 @@ export interface Product {
     name: { en: string; bn: string };
     category: string;
     categoryName: { en: string; bn: string };
-    image: string;
+    image: string;                 // primary / thumbnail image (required, backward-compat)
+    images?: string[];             // additional gallery images (optional)
+    videoUrl?: string;             // YouTube embed or direct MP4 URL (optional)
     price: number;                 // BDT
     discount?: number;             // percent
     rating: number;
@@ -48,6 +50,11 @@ export const productsData: Product[] = [
         category: "monitoring",
         categoryName: { en: "Monitoring & Diagnostics", bn: "মনিটরিং ও ডায়াগনস্টিক" },
         image: "https://images.unsplash.com/photo-1631815588090-d1bcbe9b4b38?auto=format&fit=crop&q=80&w=600",
+        images: [
+            "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=600",
+            "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=600"
+        ],
+        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         price: 3200,
         discount: 10,
         rating: 4.8,

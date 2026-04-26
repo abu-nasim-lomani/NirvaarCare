@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
-import { productsData, productCategories } from "@/constants/products";
+import { createClient } from "@/lib/supabase/client";
 import type { Product } from "@/constants/products";
 import CartDrawer from "@/components/products/CartDrawer";
 
@@ -29,10 +29,51 @@ export default function ProductsPage() {
     const [cartOpen, setCartOpen] = useState(false);
     const [addedToCart, setAddedToCart] = useState<string | null>(null);
 
+    const [dbProducts, setDbProducts] = useState<Product[]>([]);
+    const [dbCategories, setDbCategories] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data: catData } = await supabase.from("product_categories").select("*");
+            const { data: prodData } = await supabase.from("products").select(`*, product_categories(slug, name_en, name_bn)`);
+            
+            if (catData) {
+                setDbCategories(catData.map(c => ({ id: c.slug, name: { en: c.name_en, bn: c.name_bn }, icon: "Activity" })));
+            }
+            if (prodData) {
+                setDbProducts(prodData.map(p => ({
+                    id: p.slug,
+                    name: { en: p.name_en, bn: p.name_bn },
+                    category: p.product_categories?.slug || p.category_id,
+                    categoryName: { en: p.product_categories?.name_en || '', bn: p.product_categories?.name_bn || '' },
+                    image: p.image,
+                    images: p.images || [],
+                    videoUrl: p.video_url || undefined,
+                    price: p.price,
+                    discount: p.discount || undefined,
+                    rating: p.rating || 5,
+                    reviewCount: p.review_count || 0,
+                    inStock: p.in_stock,
+                    isNew: p.is_new,
+                    isFeatured: p.is_featured,
+                    shortDesc: { en: p.short_desc_en, bn: p.short_desc_bn },
+                    description: { en: p.desc_en, bn: p.desc_bn },
+                    features: p.features_en?.map((fen: string, i: number) => ({ en: fen, bn: p.features_bn?.[i] || fen })) || [],
+                    specs: p.specs || [],
+                    tags: []
+                })));
+            }
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
+
     const maxPrice = 50000;
 
     const filteredProducts = useMemo(() => {
-        let result = productsData.filter(p => {
+        let result = dbProducts.filter(p => {
             const matchSearch = search === "" ||
                 p.name.en.toLowerCase().includes(search.toLowerCase()) ||
                 p.name.bn.includes(search) ||
@@ -50,7 +91,7 @@ export default function ProductsPage() {
             default: result = [...result].sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
         }
         return result;
-    }, [search, selectedCategory, sortBy, priceRange]);
+    }, [dbProducts, search, selectedCategory, sortBy, priceRange]);
 
     const handleAddToCart = (product: Product, e: React.MouseEvent) => {
         e.preventDefault();
@@ -175,7 +216,7 @@ export default function ProductsPage() {
                                             {lang === "en" ? "Category" : "বিভাগ"}
                                         </h3>
                                         <div className="flex flex-wrap gap-2">
-                                            {[{ id: "all", name: { en: "All Products", bn: "সব পণ্য" } }, ...productCategories].map(cat => (
+                                            {[{ id: "all", name: { en: "All Products", bn: "সব পণ্য" } }, ...dbCategories].map(cat => (
                                                 <button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
                                                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all border ${selectedCategory === cat.id ? "bg-emerald-600 text-white border-emerald-600 shadow-sm" : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-emerald-300"}`}>
                                                     {lang === "en" ? cat.name.en : cat.name.bn}
@@ -204,7 +245,7 @@ export default function ProductsPage() {
 
                 {/* Category pill tabs */}
                 <div className="flex gap-2 overflow-x-auto pb-2 mb-8" style={{ scrollbarWidth: "none" }}>
-                    {[{ id: "all", name: { en: "All", bn: "সব" } }, ...productCategories].map(cat => (
+                    {[{ id: "all", name: { en: "All", bn: "সব" } }, ...dbCategories].map(cat => (
                         <button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
                             className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all border ${selectedCategory === cat.id ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20" : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-emerald-300"}`}>
                             {lang === "en" ? cat.name.en : cat.name.bn}
@@ -237,7 +278,6 @@ export default function ProductsPage() {
                                 inCart={cart.some(i => i.id === product.id)}
                                 inWishlist={wishlist.has(product.id)}
                                 justAdded={addedToCart === product.id}
-                                onAddToCart={(e) => handleAddToCart(product, e)}
                                 onWishlist={(e) => toggleWishlist(product.id, e)}
                             />
                         ))}
@@ -249,7 +289,6 @@ export default function ProductsPage() {
                                 inCart={cart.some(i => i.id === product.id)}
                                 inWishlist={wishlist.has(product.id)}
                                 justAdded={addedToCart === product.id}
-                                onAddToCart={(e) => handleAddToCart(product, e)}
                                 onWishlist={(e) => toggleWishlist(product.id, e)}
                             />
                         ))}
@@ -264,10 +303,9 @@ export default function ProductsPage() {
 }
 
 // ── Product Card (Grid) ──────────────────────────────────────────────
-function ProductCard({ product, lang, idx, inCart, inWishlist, justAdded, onAddToCart, onWishlist }: {
+function ProductCard({ product, lang, idx, inCart, inWishlist, justAdded, onWishlist }: {
     product: Product; lang: string; idx: number;
     inCart: boolean; inWishlist: boolean; justAdded: boolean;
-    onAddToCart: (e: React.MouseEvent) => void;
     onWishlist: (e: React.MouseEvent) => void;
 }) {
     const discountedPrice = product.discount ? Math.round(product.price * (1 - product.discount / 100)) : product.price;
@@ -319,21 +357,10 @@ function ProductCard({ product, lang, idx, inCart, inWishlist, justAdded, onAddT
                         <span className="text-xl font-bold text-gray-900 dark:text-white">৳{discountedPrice.toLocaleString()}</span>
                         {product.discount && <span className="text-sm text-gray-400 line-through">৳{product.price.toLocaleString()}</span>}
                     </div>
-                    <button onClick={onAddToCart} disabled={!product.inStock}
-                        className={`w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${!product.inStock ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed" : justAdded ? "bg-emerald-500 text-white scale-95" : inCart ? "bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400" : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20"}`}>
-                        <AnimatePresence mode="wait">
-                            {justAdded ? (
-                                <motion.span key="added" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1.5">
-                                    <Check size={15} /> {lang === "en" ? "Added!" : "যোগ হয়েছে!"}
-                                </motion.span>
-                            ) : (
-                                <motion.span key="add" className="flex items-center gap-1.5">
-                                    <ShoppingCart size={15} />
-                                    {inCart ? (lang === "en" ? "In Cart" : "কার্টে আছে") : (lang === "en" ? "Add to Cart" : "কার্টে যোগ করুন")}
-                                </motion.span>
-                            )}
-                        </AnimatePresence>
-                    </button>
+                    <div
+                        className="w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-300 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20">
+                        {lang === "en" ? "View Details" : "বিস্তারিত দেখুন"}
+                    </div>
                 </div>
             </Link>
         </motion.div>
@@ -341,10 +368,9 @@ function ProductCard({ product, lang, idx, inCart, inWishlist, justAdded, onAddT
 }
 
 // ── Product List Item ────────────────────────────────────────────────
-function ProductListItem({ product, lang, idx, inCart, inWishlist, justAdded, onAddToCart, onWishlist }: {
+function ProductListItem({ product, lang, idx, inCart, inWishlist, justAdded, onWishlist }: {
     product: Product; lang: string; idx: number;
     inCart: boolean; inWishlist: boolean; justAdded: boolean;
-    onAddToCart: (e: React.MouseEvent) => void;
     onWishlist: (e: React.MouseEvent) => void;
 }) {
     const discountedPrice = product.discount ? Math.round(product.price * (1 - product.discount / 100)) : product.price;
@@ -394,15 +420,9 @@ function ProductListItem({ product, lang, idx, inCart, inWishlist, justAdded, on
                             <span className="text-2xl font-bold text-gray-900 dark:text-white">৳{discountedPrice.toLocaleString()}</span>
                             {product.discount && <span className="text-sm text-gray-400 line-through">৳{product.price.toLocaleString()}</span>}
                         </div>
-                        <div className="flex gap-2">
-                            <span className="px-4 py-2 rounded-xl border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 text-sm font-medium">
-                                {lang === "en" ? "View Details →" : "বিস্তারিত →"}
-                            </span>
-                            <button onClick={onAddToCart} disabled={!product.inStock}
-                                className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${!product.inStock ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed" : justAdded ? "bg-emerald-500 text-white" : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20"}`}>
-                                {justAdded ? <><Check size={15} /> {lang === "en" ? "Added!" : "হয়েছে!"}</> : <><ShoppingCart size={15} /> {lang === "en" ? "Add to Cart" : "কার্টে যোগ করুন"}</>}
-                            </button>
-                        </div>
+                            <div className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-600/20">
+                                {lang === "en" ? "View Details" : "বিস্তারিত দেখুন"}
+                            </div>
                     </div>
                 </div>
             </Link>

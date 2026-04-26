@@ -10,12 +10,13 @@ import {
     ChevronRight, Star, ShoppingCart, Zap, Heart,
     Share2, Shield, Truck, RotateCcw, Phone,
     Check, Minus, Plus, Package, ArrowLeft,
-    CheckCircle2, Info, MessageCircle, Tag
+    CheckCircle2, Info, MessageCircle, Tag, Play
 } from "lucide-react";
 import { useLang } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { productsData } from "@/constants/products";
 import type { Product } from "@/constants/products";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -28,9 +29,83 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     const [inWishlist, setInWishlist] = useState(false);
     const [addedFeedback, setAddedFeedback] = useState(false);
     const [showStickyBar, setShowStickyBar] = useState(false);
+    const [activeMediaIndex, setActiveMediaIndex] = useState(0);
     const ctaRef = useRef<HTMLDivElement>(null);
 
-    const product = productsData.find(p => p.id === id);
+    const [product, setProduct] = useState<Product | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const { data } = await supabase
+                .from("products")
+                .select(`*, product_categories(slug, name_en, name_bn)`)
+                .eq("slug", id)
+                .single();
+
+            if (data) {
+                const mappedProduct: Product = {
+                    id: data.slug,
+                    name: { en: data.name_en, bn: data.name_bn },
+                    category: data.product_categories?.slug || data.category_id,
+                    categoryName: { en: data.product_categories?.name_en || '', bn: data.product_categories?.name_bn || '' },
+                    image: data.image,
+                    images: data.images || [],
+                    videoUrl: data.video_url || undefined,
+                    price: data.price,
+                    discount: data.discount || undefined,
+                    rating: data.rating || 5,
+                    reviewCount: data.review_count || 0,
+                    inStock: data.in_stock,
+                    isNew: data.is_new,
+                    isFeatured: data.is_featured,
+                    shortDesc: { en: data.short_desc_en, bn: data.short_desc_bn },
+                    description: { en: data.desc_en, bn: data.desc_bn },
+                    features: data.features_en?.map((fen: string, i: number) => ({ en: fen, bn: data.features_bn?.[i] || fen })) || [],
+                    specs: data.specs || [],
+                    tags: []
+                };
+                setProduct(mappedProduct);
+
+                // Fetch related products
+                const { data: relatedData } = await supabase
+                    .from("products")
+                    .select(`*, product_categories(slug, name_en, name_bn)`)
+                    .eq("category_id", data.category_id)
+                    .neq("id", data.id)
+                    .limit(4);
+
+                if (relatedData) {
+                    setRelatedProducts(relatedData.map(p => ({
+                        id: p.slug,
+                        name: { en: p.name_en, bn: p.name_bn },
+                        category: p.product_categories?.slug || p.category_id,
+                        categoryName: { en: p.product_categories?.name_en || '', bn: p.product_categories?.name_bn || '' },
+                        image: p.image,
+                        images: p.images || [],
+                        videoUrl: p.video_url || undefined,
+                        price: p.price,
+                        discount: p.discount || undefined,
+                        rating: p.rating || 5,
+                        reviewCount: p.review_count || 0,
+                        inStock: p.in_stock,
+                        isNew: p.is_new,
+                        isFeatured: p.is_featured,
+                        shortDesc: { en: p.short_desc_en, bn: p.short_desc_bn },
+                        description: { en: p.desc_en, bn: p.desc_bn },
+                        features: p.features_en?.map((fen: string, i: number) => ({ en: fen, bn: p.features_bn?.[i] || fen })) || [],
+                        specs: p.specs || [],
+                        tags: []
+                    })));
+                }
+            }
+            setLoading(false);
+        };
+        fetchProduct();
+    }, [id]);
+
     const inCart = product ? cart.some(i => i.id === product.id) : false;
 
     useEffect(() => {
@@ -45,6 +120,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     // Scroll to top on load
     useEffect(() => { window.scrollTo(0, 0); }, [id]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center pt-20 bg-white dark:bg-gray-950">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+            </div>
+        );
+    }
 
     if (!product) {
         return (
@@ -74,9 +157,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         : product.price;
     const savings = product.price - discountedPrice;
 
-    const relatedProducts = productsData
-        .filter(p => p.category === product.category && p.id !== product.id)
-        .slice(0, 4);
+
+
+    const mediaItems = product ? [
+        { type: "image", url: product.image },
+        ...(product.images ? product.images.map(url => ({ type: "image", url })) : []),
+        ...(product.videoUrl ? [{ type: "video", url: product.videoUrl }] : [])
+    ] : [];
+    const activeMedia = mediaItems[activeMediaIndex] || { type: "image", url: "" };
 
     const handleAddToCart = () => {
         addToCart(product, quantity);
@@ -84,10 +172,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         setTimeout(() => setAddedFeedback(false), 2000);
     };
 
-    const handleBuyNow = () => {
-        addToCart(product, quantity);
-        router.push("/checkout");
-    };
+
 
     const handleWhatsAppOrder = () => {
         const msg = encodeURIComponent(
@@ -96,49 +181,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         window.open(`https://wa.me/8801715599599?text=${msg}`, "_blank");
     };
 
-    // Sample reviews
-    const sampleReviews = [
-        {
-            name: lang === "en" ? "Amina Begum" : "আমিনা বেগম",
-            initials: "AB", rating: 5,
-            date: lang === "en" ? "2 weeks ago" : "২ সপ্তাহ আগে",
-            text: lang === "en"
-                ? "Excellent product! Delivery was fast and packaging was great. Very satisfied with the quality."
-                : "অসাধারণ পণ্য! ডেলিভারি দ্রুত হয়েছে এবং প্যাকেজিং খুব সুন্দর ছিল। মানের ব্যাপারে খুব সন্তুষ্ট।",
-            verified: true, color: "bg-emerald-500"
-        },
-        {
-            name: lang === "en" ? "Karim Uddin" : "করিম উদ্দিন",
-            initials: "KU", rating: product.rating >= 4.5 ? 5 : 4,
-            date: lang === "en" ? "1 month ago" : "১ মাস আগে",
-            text: lang === "en"
-                ? "Bought it for my elderly parents. They love it! The product works exactly as described."
-                : "বয়স্ক বাবা-মায়ের জন্য কিনেছিলাম। তারা খুব পছন্দ করেছেন! বিবরণ অনুযায়ী পণ্যটি সঠিকভাবে কাজ করে।",
-            verified: true, color: "bg-teal-500"
-        },
-        {
-            name: lang === "en" ? "Nasrin Khatun" : "নাসরিন খাতুন",
-            initials: "NK", rating: Math.round(product.rating),
-            date: lang === "en" ? "3 months ago" : "৩ মাস আগে",
-            text: lang === "en"
-                ? "Good product overall. The user manual could be more detailed but the product itself is worth the price."
-                : "সামগ্রিকভাবে ভালো পণ্য। ব্যবহারবিধি আরেকটু বিস্তারিত হলে ভালো হতো কিন্তু পণ্যটি মূল্যের দিক থেকে উপযুক্ত।",
-            verified: false, color: "bg-violet-500"
-        },
-    ];
 
-    const ratingDist = [
-        { stars: 5, pct: product.rating >= 4.8 ? 80 : product.rating >= 4.5 ? 65 : 50 },
-        { stars: 4, pct: product.rating >= 4.5 ? 14 : 25 },
-        { stars: 3, pct: 5 },
-        { stars: 2, pct: 1 },
-        { stars: 1, pct: 0 },
-    ];
 
-    const tabs: { id: "overview" | "specs" | "reviews"; label: string }[] = [
+    const tabs: { id: "overview" | "specs"; label: string }[] = [
         { id: "overview", label: lang === "en" ? "Overview" : "বিবরণ" },
         { id: "specs", label: lang === "en" ? "Specifications" : "স্পেসিফিকেশন" },
-        { id: "reviews", label: lang === "en" ? `Reviews (${product.reviewCount})` : `রিভিউ (${product.reviewCount})` },
     ];
 
     const WhatsappIcon = () => (
@@ -177,13 +224,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* LEFT: Image ── */}
                     <div>
-                        <div className="sticky top-28">
-                            {/* Main Image Box */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="relative bg-gradient-to-br from-slate-50 via-emerald-50/40 to-teal-50/20 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-3xl overflow-hidden aspect-square shadow-xl shadow-gray-200/50 dark:shadow-none"
-                            >
+                        <div className="sticky top-28 flex flex-col md:flex-row gap-4 items-start">
+                            {/* Thumbnails (Left side on desktop, bottom on mobile) */}
+                            {mediaItems.length > 1 && (
+                                <div className="flex md:flex-col gap-3 overflow-auto md:max-h-[500px] w-full md:w-20 flex-shrink-0 order-2 md:order-1" style={{ scrollbarWidth: "none" }}>
+                                    {mediaItems.map((item, idx) => (
+                                        <button key={idx} onClick={() => setActiveMediaIndex(idx)}
+                                            className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${activeMediaIndex === idx ? "border-emerald-500 shadow-md shadow-emerald-500/20" : "border-transparent opacity-70 hover:opacity-100"}`}>
+                                            {item.type === "image" ? (
+                                                <img src={item.url} alt="thumbnail" className="w-full h-full object-cover bg-gray-50 dark:bg-gray-800" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center relative">
+                                                    <Play size={24} className="text-emerald-600" />
+                                                </div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="flex-1 w-full min-w-0 order-1 md:order-2">
+                                {/* Main Image Box */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="relative bg-gradient-to-br from-slate-50 via-emerald-50/40 to-teal-50/20 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-3xl overflow-hidden aspect-square shadow-xl shadow-gray-200/50 dark:shadow-none"
+                                >
                                 {/* Decorative orbs */}
                                 <div className="absolute top-6 right-6 w-40 h-40 bg-emerald-300/25 dark:bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
                                 <div className="absolute bottom-6 left-6 w-32 h-32 bg-teal-300/20 dark:bg-teal-600/10 rounded-full blur-2xl pointer-events-none" />
@@ -196,22 +262,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             {lang === "en" ? "✨ NEW ARRIVAL" : "✨ নতুন পণ্য"}
                                         </motion.span>
                                     )}
-                                    {product.discount && (
-                                        <motion.span initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-                                            className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-500/30">
-                                            {product.discount}% {lang === "en" ? "OFF" : "ছাড়"}
-                                        </motion.span>
-                                    )}
-                                    {product.isFeatured && (
-                                        <motion.span initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.35 }}
-                                            className="px-3 py-1 rounded-full bg-amber-400 text-amber-900 text-xs font-bold shadow">
-                                            ⭐ {lang === "en" ? "Top Pick" : "টপ পিক"}
-                                        </motion.span>
-                                    )}
+
                                 </div>
 
                                 {/* Top-right action buttons */}
-                                <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+                                <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 items-center">
+                                    {/* Professional Circle Discount Badge */}
+                                    {product.discount && (
+                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.3 }}
+                                            className="w-12 h-12 rounded-full bg-red-500 text-white flex flex-col items-center justify-center shadow-lg shadow-red-500/40 mb-1 z-20">
+                                            <span className="text-[13px] font-black leading-none">-{product.discount}%</span>
+                                            <span className="text-[9px] font-bold uppercase tracking-wider">{lang === "en" ? "OFF" : "ছাড়"}</span>
+                                        </motion.div>
+                                    )}
                                     <motion.button whileTap={{ scale: 0.9 }}
                                         onClick={() => setInWishlist(!inWishlist)}
                                         className={`w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${inWishlist ? "bg-red-500 text-white shadow-red-400/40" : "bg-white dark:bg-gray-800 text-gray-400 hover:text-red-500 hover:shadow-red-200/40 dark:hover:shadow-none"}`}>
@@ -224,15 +287,28 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     </motion.button>
                                 </div>
 
-                                {/* Product Image */}
-                                <motion.img
-                                    initial={{ scale: 0.9, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    transition={{ duration: 0.5 }}
-                                    src={product.image}
-                                    alt={product.name.en}
-                                    className="w-full h-full object-contain p-10 hover:scale-105 transition-transform duration-700 relative z-0"
-                                />
+                                {/* Product Image/Video */}
+                                {activeMedia.type === "image" ? (
+                                    <motion.img
+                                        key={activeMedia.url}
+                                        initial={{ scale: 0.9, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                        src={activeMedia.url}
+                                        alt={product.name.en}
+                                        className="w-full h-full object-contain p-10 hover:scale-105 transition-transform duration-700 relative z-0"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full relative z-0 flex items-center justify-center p-4">
+                                        <iframe
+                                            src={activeMedia.url}
+                                            title="Product Video"
+                                            className="w-full h-full rounded-xl"
+                                            allowFullScreen
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        ></iframe>
+                                    </div>
+                                )}
 
                                 {/* Out of stock overlay */}
                                 {!product.inStock && (
@@ -247,23 +323,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 )}
                             </motion.div>
 
-                            {/* Social Proof pill */}
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                                className="mt-4 flex items-center justify-center gap-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/40 rounded-2xl p-3.5">
-                                <div className="flex -space-x-2">
-                                    {["AB", "KU", "NK"].map((init, i) => (
-                                        <div key={i} className={`w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center text-white text-[10px] font-bold ${["bg-emerald-500", "bg-teal-500", "bg-violet-500"][i]}`}>
-                                            {init}
-                                        </div>
-                                    ))}
-                                </div>
-                                <p className="text-sm text-emerald-700 dark:text-emerald-400 font-semibold">
-                                    {product.reviewCount}+ {lang === "en" ? "verified buyers" : "যাচাইকৃত ক্রেতা"}
-                                </p>
-                                <div className="flex">
-                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} size={13} className="text-amber-400 fill-amber-400" />)}
-                                </div>
-                            </motion.div>
+
+
+
+                            </div>
                         </div>
                     </div>
 
@@ -300,25 +363,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {product.name[lang === "en" ? "en" : "bn"]}
                         </h1>
 
-                        {/* Rating Row */}
-                        <div className="flex items-center gap-3 flex-wrap">
-                            <div className="flex items-center gap-1.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star key={i} size={18}
-                                        className={i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : i < product.rating ? "text-amber-300 fill-amber-300" : "text-gray-300 dark:text-gray-600"} />
-                                ))}
-                                <span className="ml-1 font-bold text-gray-800 dark:text-gray-200 text-lg">{product.rating}</span>
-                            </div>
-                            <button onClick={() => setActiveTab("reviews")}
-                                className="text-emerald-600 dark:text-emerald-400 text-sm font-semibold hover:underline">
-                                {product.reviewCount} {lang === "en" ? "verified reviews" : "যাচাইকৃত রিভিউ"}
-                            </button>
-                            {product.isFeatured && (
-                                <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
-                                    {lang === "en" ? "🏆 Best Seller" : "🏆 বেস্ট সেলার"}
-                                </span>
-                            )}
-                        </div>
+
 
                         {/* Divider */}
                         <div className="h-px bg-gradient-to-r from-emerald-100 via-teal-100 to-transparent dark:from-emerald-900/40 dark:via-teal-900/40" />
@@ -372,83 +417,25 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         {/* Divider */}
                         <div className="h-px bg-gradient-to-r from-emerald-100 via-teal-100 to-transparent dark:from-emerald-900/40 dark:via-teal-900/40" />
 
-                        {/* Quantity + CTA ── ref for sticky bar */}
+                        {/* CTA ── ref for sticky bar */}
                         <div ref={ctaRef} className="space-y-4">
-                            {/* Quantity */}
-                            <div className="flex items-center gap-4">
-                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 w-20 flex-shrink-0">
-                                    {lang === "en" ? "Quantity:" : "পরিমাণ:"}
-                                </span>
-                                <div className="flex items-center border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden">
-                                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                                        className="w-12 h-12 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg font-bold">
-                                        <Minus size={16} />
-                                    </button>
-                                    <span className="w-14 text-center font-bold text-gray-900 dark:text-white text-xl border-x-2 border-gray-200 dark:border-gray-700">
-                                        {quantity}
-                                    </span>
-                                    <button onClick={() => setQuantity(q => Math.min(10, q + 1))}
-                                        className="w-12 h-12 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg font-bold">
-                                        <Plus size={16} />
-                                    </button>
-                                </div>
-                                <span className="text-xs text-gray-400">Max 10</span>
-                            </div>
 
-                            {/* ── CTA Buttons ── */}
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                {/* Add to Cart */}
-                                <motion.button
-                                    whileHover={{ scale: product.inStock ? 1.02 : 1 }}
-                                    whileTap={{ scale: product.inStock ? 0.97 : 1 }}
-                                    onClick={handleAddToCart}
-                                    disabled={!product.inStock}
-                                    className={`flex-1 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-300 border-2 ${!product.inStock
-                                        ? "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                                        : addedFeedback
-                                            ? "border-emerald-500 bg-emerald-500 text-white shadow-xl shadow-emerald-400/30"
-                                            : inCart
-                                                ? "border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30"
-                                                : "border-emerald-600 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:shadow-lg hover:shadow-emerald-100/50 dark:hover:shadow-none"
-                                    }`}
-                                >
-                                    <AnimatePresence mode="wait">
-                                        {addedFeedback ? (
-                                            <motion.span key="added" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
-                                                <Check size={20} />
-                                                {lang === "en" ? "Added to Cart!" : "কার্টে যোগ হয়েছে!"}
-                                            </motion.span>
-                                        ) : (
-                                            <motion.span key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
-                                                <ShoppingCart size={20} />
-                                                {inCart ? (lang === "en" ? "Update Cart" : "কার্ট আপডেট") : (lang === "en" ? "Add to Cart" : "কার্টে যোগ করুন")}
-                                            </motion.span>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.button>
-
-                                {/* Buy Now */}
-                                <motion.button
-                                    whileHover={{ scale: product.inStock ? 1.02 : 1 }}
-                                    whileTap={{ scale: product.inStock ? 0.97 : 1 }}
-                                    onClick={handleBuyNow}
-                                    disabled={!product.inStock}
-                                    className={`flex-1 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-300 ${!product.inStock
-                                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                                        : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/40 hover:-translate-y-0.5"
-                                    }`}
-                                >
-                                    <Zap size={20} />
-                                    {lang === "en" ? "Buy Now" : "এখনই কিনুন"}
-                                </motion.button>
-                            </div>
-
-                            {/* WhatsApp Order */}
-                            <button onClick={handleWhatsAppOrder}
-                                className="w-full py-3.5 rounded-2xl border border-green-300 dark:border-green-800 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 font-semibold text-sm flex items-center justify-center gap-2.5 hover:bg-green-100 dark:hover:bg-green-900/30 transition-all">
+                            {/* WhatsApp Primary CTA */}
+                            <motion.button
+                                onClick={handleWhatsAppOrder}
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="w-full py-5 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-lg flex items-center justify-center gap-3 shadow-2xl shadow-green-400/40 transition-all duration-300"
+                            >
                                 <WhatsappIcon />
-                                {lang === "en" ? "Order via WhatsApp (+880 1715-599599)" : "WhatsApp এ অর্ডার করুন (+৮৮০ ১৭১৫-৫৯৯৫৯৯)"}
-                            </button>
+                                {lang === "en" ? "Order via WhatsApp" : "WhatsApp এ অর্ডার করুন"}
+                            </motion.button>
+
+                            {/* Phone number subtle hint */}
+                            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                                📞 {lang === "en" ? "Call or message us:" : "কল বা মেসেজ করুন:"}
+                                <span className="ml-1 font-semibold text-gray-700 dark:text-gray-300">+880 1715-599599</span>
+                            </p>
                         </div>
 
                         {/* Trust Badges */}
@@ -497,21 +484,52 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
                                 className="grid md:grid-cols-2 gap-10">
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                                        {lang === "en" ? "About This Product" : "এই পণ্য সম্পর্কে"}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
-                                        {product.description[lang === "en" ? "en" : "bn"]}
-                                    </p>
-                                    {product.tags && (
-                                        <div className="mt-6 flex flex-wrap gap-2">
-                                            {product.tags.map((tag, i) => (
-                                                <span key={i} className="flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-200 dark:border-emerald-800">
-                                                    <Tag size={11} />{tag}
-                                                </span>
-                                            ))}
+                                    {/* Story Card */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 16 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="relative bg-gradient-to-br from-emerald-50 via-white to-teal-50/60 dark:from-gray-800 dark:via-gray-900 dark:to-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 p-6 shadow-sm overflow-hidden"
+                                    >
+                                        {/* Decorative background circle */}
+                                        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-emerald-100/60 dark:bg-emerald-900/20 blur-2xl pointer-events-none" />
+
+                                        {/* Card Header */}
+                                        <div className="flex items-center gap-3 mb-5">
+                                            <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+                                                <Package size={20} />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                                                    {lang === "en" ? "About This Product" : "এই পণ্য সম্পর্কে"}
+                                                </h3>
+                                                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                                                    {lang === "en" ? "Read before you decide" : "কেনার আগে একবার পড়ুন"}
+                                                </p>
+                                            </div>
                                         </div>
-                                    )}
+
+                                        {/* Divider */}
+                                        <div className="h-px bg-gradient-to-r from-emerald-200 to-transparent dark:from-emerald-800/50 mb-5" />
+
+                                        {/* Description text with styled first letter */}
+                                        <div className="relative">
+                                            <p className="text-gray-700 dark:text-gray-300 leading-[1.9] text-[15px] first-letter:text-3xl first-letter:font-black first-letter:text-emerald-600 dark:first-letter:text-emerald-400 first-letter:float-left first-letter:mr-2 first-letter:leading-none first-letter:mt-1">
+                                                {product.description[lang === "en" ? "en" : "bn"]}
+                                            </p>
+                                        </div>
+
+                                        {/* Bottom tags */}
+                                        {product.tags && product.tags.length > 0 && (
+                                            <div className="mt-5 pt-4 border-t border-emerald-100 dark:border-emerald-900/30 flex flex-wrap gap-2">
+                                                {product.tags.map((tag, i) => (
+                                                    <span key={i} className="flex items-center gap-1 px-3 py-1 rounded-full bg-white dark:bg-gray-800 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-200 dark:border-emerald-800 shadow-sm">
+                                                        <Tag size={10} />{tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </motion.div>
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
@@ -565,89 +583,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </motion.div>
                         )}
 
-                        {/* REVIEWS TAB */}
-                        {activeTab === "reviews" && (
-                            <motion.div key="reviews"
-                                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
-                                className="space-y-10">
-                                {/* Rating Overview */}
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    {/* Big rating number */}
-                                    <div className="text-center bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-100 dark:border-emerald-900/40 rounded-3xl p-10">
-                                        <div className="text-8xl font-black text-gray-900 dark:text-white mb-3">{product.rating}</div>
-                                        <div className="flex justify-center gap-1 mb-3">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <Star key={i} size={24} className={i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-300 dark:text-gray-600"} />
-                                            ))}
-                                        </div>
-                                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">
-                                            {lang === "en" ? `Based on ${product.reviewCount} verified reviews` : `${product.reviewCount}টি যাচাইকৃত রিভিউ অনুসারে`}
-                                        </p>
-                                    </div>
-                                    {/* Rating bar chart */}
-                                    <div className="space-y-3 flex flex-col justify-center">
-                                        {ratingDist.map(({ stars, pct }) => (
-                                            <div key={stars} className="flex items-center gap-3">
-                                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 w-10 text-right">{stars} ★</span>
-                                                <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    <motion.div
-                                                        initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.2, duration: 0.6 }}
-                                                        className="h-full bg-gradient-to-r from-amber-400 to-amber-300 rounded-full" />
-                                                </div>
-                                                <span className="text-xs font-medium text-gray-400 w-8">{pct}%</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
 
-                                {/* Individual Reviews */}
-                                <div className="space-y-4">
-                                    {sampleReviews.map((review, i) => (
-                                        <motion.div key={i}
-                                            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                                            className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 hover:shadow-md transition-shadow">
-                                            <div className="flex items-start gap-4">
-                                                <div className={`w-12 h-12 rounded-2xl ${review.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md`}>
-                                                    {review.initials}
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
-                                                        <div>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="font-bold text-gray-800 dark:text-gray-200">{review.name}</span>
-                                                                {review.verified && (
-                                                                    <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold border border-emerald-200 dark:border-emerald-800">
-                                                                        <Check size={10} /> {lang === "en" ? "Verified" : "যাচাইকৃত"}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="flex items-center gap-1 mt-1">
-                                                                {Array.from({ length: 5 }).map((_, j) => (
-                                                                    <Star key={j} size={13} className={j < review.rating ? "text-amber-400 fill-amber-400" : "text-gray-300 dark:text-gray-600"} />
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-xs text-gray-400">{review.date}</span>
-                                                    </div>
-                                                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{review.text}</p>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-
-                                {/* Write Review prompt */}
-                                <div className="text-center py-8 border-t border-gray-100 dark:border-gray-800">
-                                    <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm">
-                                        {lang === "en" ? "🛍️ Bought this product? Share your experience!" : "🛍️ এই পণ্য কিনেছেন? আপনার অভিজ্ঞতা শেয়ার করুন!"}
-                                    </p>
-                                    <button className="px-6 py-3 rounded-xl border-2 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 text-sm font-bold hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors flex items-center gap-2 mx-auto">
-                                        <MessageCircle size={16} />
-                                        {lang === "en" ? "Write a Review" : "রিভিউ লিখুন"}
-                                    </button>
-                                </div>
-                            </motion.div>
-                        )}
                     </AnimatePresence>
                 </div>
 
@@ -675,26 +611,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <motion.div
                         initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
                         transition={{ type: "spring", damping: 28 }}
-                        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center gap-2.5 shadow-2xl lg:hidden"
+                        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 px-4 py-3 shadow-2xl lg:hidden"
                     >
-                        {/* Mini qty */}
-                        <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800">
-                            <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-10 h-11 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <Minus size={14} />
-                            </button>
-                            <span className="font-bold text-gray-900 dark:text-white text-sm w-7 text-center">{quantity}</span>
-                            <button onClick={() => setQuantity(q => Math.min(10, q + 1))} className="w-10 h-11 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <Plus size={14} />
+                        <div className="flex items-center gap-3">
+                            <div className="flex-1">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{product.name[lang === "en" ? "en" : "bn"]}</p>
+                                <p className="font-black text-gray-900 dark:text-white text-base">৳{discountedPrice.toLocaleString()}</p>
+                            </div>
+                            <button onClick={handleWhatsAppOrder}
+                                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-sm shadow-lg shadow-green-400/30 hover:from-green-600 hover:to-emerald-600 transition-all">
+                                <WhatsappIcon />
+                                {lang === "en" ? "Order Now" : "অর্ডার করুন"}
                             </button>
                         </div>
-                        <button onClick={handleAddToCart} disabled={!product.inStock}
-                            className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 flex items-center justify-center gap-1.5 transition-all ${addedFeedback ? "bg-emerald-500 border-emerald-500 text-white" : "border-emerald-600 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"} ${!product.inStock ? "opacity-50 cursor-not-allowed" : ""}`}>
-                            {addedFeedback ? <><Check size={15} /> {lang === "en" ? "Added!" : "হয়েছে!"}</> : <><ShoppingCart size={15} /> {lang === "en" ? "Add to Cart" : "কার্টে যোগ"}</>}
-                        </button>
-                        <button onClick={handleBuyNow} disabled={!product.inStock}
-                            className={`flex-1 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg flex items-center justify-center gap-1.5 ${!product.inStock ? "opacity-50 cursor-not-allowed" : ""}`}>
-                            <Zap size={15} /> {lang === "en" ? "Buy Now" : "কিনুন"}
-                        </button>
                     </motion.div>
                 )}
             </AnimatePresence>
