@@ -26,7 +26,8 @@ export default function ManageProducts() {
         price: "", discount: "", in_stock: true, is_new: false, is_featured: false,
         short_desc_en: "", short_desc_bn: "", desc_en: "", desc_bn: "",
         image: "", images: "", video_url: "",
-        features_en: "", features_bn: "", specs: ""
+        features_en: "", features_bn: "", specs: "",
+        how_to_use_en: "", how_to_use_bn: ""
     });
 
     useEffect(() => {
@@ -64,7 +65,8 @@ export default function ManageProducts() {
             price: "", discount: "", in_stock: true, is_new: false, is_featured: false,
             short_desc_en: "", short_desc_bn: "", desc_en: "", desc_bn: "",
             image: "", images: "", video_url: "",
-            features_en: "", features_bn: "", specs: ""
+            features_en: "", features_bn: "", specs: "",
+            how_to_use_en: "", how_to_use_bn: ""
         });
         setError(null);
         setIsModalOpen(true);
@@ -81,7 +83,8 @@ export default function ManageProducts() {
             desc_en: p.desc_en || "", desc_bn: p.desc_bn || "",
             image: p.image || "", images: (p.images || []).join('\n'), video_url: p.video_url || "",
             features_en: (p.features_en || []).join('\n'), features_bn: (p.features_bn || []).join('\n'),
-            specs: (p.specs || []).map((s: any) => `${s.label?.en || ''} | ${s.label?.bn || ''} | ${s.value || ''}`).join('\n')
+            specs: (p.specs || []).map((s: any) => `${s.label?.en || ''} | ${s.label?.bn || ''} | ${s.value || ''}`).join('\n'),
+            how_to_use_en: p.how_to_use_en || "", how_to_use_bn: p.how_to_use_bn || ""
         });
         setError(null);
         setIsModalOpen(true);
@@ -149,6 +152,7 @@ export default function ManageProducts() {
                 in_stock: formData.in_stock, is_new: formData.is_new, is_featured: formData.is_featured,
                 short_desc_en: formData.short_desc_en, short_desc_bn: formData.short_desc_bn,
                 desc_en: formData.desc_en, desc_bn: formData.desc_bn,
+                how_to_use_en: formData.how_to_use_en, how_to_use_bn: formData.how_to_use_bn,
                 image: formData.image, video_url: formData.video_url || null,
                 images, features_en, features_bn, specs
             };
@@ -443,6 +447,14 @@ export default function ManageProducts() {
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full About (Bengali)</label>
                                             <textarea name="desc_bn" required rows={5} value={formData.desc_bn} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">How to Use (English)</label>
+                                            <textarea name="how_to_use_en" rows={4} value={formData.how_to_use_en} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">How to Use (Bengali)</label>
+                                            <textarea name="how_to_use_bn" rows={4} value={formData.how_to_use_bn} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
                                         </div>
                                     </div>
                                 </div>

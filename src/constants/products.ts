@@ -21,6 +21,7 @@ export interface Product {
     description: { en: string; bn: string };
     features: { en: string; bn: string }[];
     specs?: { label: { en: string; bn: string }; value: string }[];
+    howToUse?: { en: string; bn: string };
     tags?: string[];
 }
 

@@ -25,11 +25,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     const router = useRouter();
 
     const [quantity, setQuantity] = useState(1);
-    const [activeTab, setActiveTab] = useState<"overview" | "specs" | "reviews">("overview");
+    const [activeTab, setActiveTab] = useState<"overview" | "specs" | "howToUse">("overview");
     const [inWishlist, setInWishlist] = useState(false);
     const [addedFeedback, setAddedFeedback] = useState(false);
     const [showStickyBar, setShowStickyBar] = useState(false);
     const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+    const [isZoomed, setIsZoomed] = useState(false);
+    const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
     const ctaRef = useRef<HTMLDivElement>(null);
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -65,6 +67,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     description: { en: data.desc_en, bn: data.desc_bn },
                     features: data.features_en?.map((fen: string, i: number) => ({ en: fen, bn: data.features_bn?.[i] || fen })) || [],
                     specs: data.specs || [],
+                    howToUse: { en: data.how_to_use_en || "Please refer to the manual for usage instructions.", bn: data.how_to_use_bn || "ব্যবহারের নিয়মের জন্য অনুগ্রহ করে ম্যানুয়ালটি দেখুন।" },
                     tags: []
                 };
                 setProduct(mappedProduct);
@@ -97,6 +100,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         description: { en: p.desc_en, bn: p.desc_bn },
                         features: p.features_en?.map((fen: string, i: number) => ({ en: fen, bn: p.features_bn?.[i] || fen })) || [],
                         specs: p.specs || [],
+                        howToUse: { en: p.how_to_use_en || "Please refer to the manual for usage instructions.", bn: p.how_to_use_bn || "ব্যবহারের নিয়মের জন্য অনুগ্রহ করে ম্যানুয়ালটি দেখুন।" },
                         tags: []
                     })));
                 }
@@ -172,6 +176,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         setTimeout(() => setAddedFeedback(false), 2000);
     };
 
+    const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - left) / width) * 100;
+        const y = ((e.clientY - top) / height) * 100;
+        setZoomPos({ x, y });
+    };
+
 
 
     const handleWhatsAppOrder = () => {
@@ -183,9 +194,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
 
 
-    const tabs: { id: "overview" | "specs"; label: string }[] = [
+    const tabs: { id: "overview" | "specs" | "howToUse"; label: string }[] = [
         { id: "overview", label: lang === "en" ? "Overview" : "বিবরণ" },
         { id: "specs", label: lang === "en" ? "Specifications" : "স্পেসিফিকেশন" },
+        { id: "howToUse", label: lang === "en" ? "How to Use" : "সেবনের নিয়ম" },
     ];
 
     const WhatsappIcon = () => (
@@ -292,11 +304,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <motion.img
                                         key={activeMedia.url}
                                         initial={{ scale: 0.9, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ duration: 0.5 }}
+                                        animate={{ scale: isZoomed ? 2.5 : 1, opacity: 1 }}
+                                        transition={{ duration: isZoomed ? 0.1 : 0.4 }}
                                         src={activeMedia.url}
                                         alt={product.name.en}
-                                        className="w-full h-full object-contain p-10 hover:scale-105 transition-transform duration-700 relative z-0"
+                                        onMouseEnter={() => setIsZoomed(true)}
+                                        onMouseLeave={() => setIsZoomed(false)}
+                                        onMouseMove={handleMouseMove}
+                                        style={{
+                                            transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                                            cursor: isZoomed ? "crosshair" : "default"
+                                        }}
+                                        className="w-full h-full object-contain p-10 relative z-0"
                                     />
                                 ) : (
                                     <div className="w-full h-full relative z-0 flex items-center justify-center p-4">
@@ -580,6 +599,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         {lang === "en" ? "Specifications not available for this product." : "এই পণ্যের স্পেসিফিকেশন পাওয়া যায়নি।"}
                                     </p>
                                 )}
+                            </motion.div>
+                        )}
+
+                        {/* HOW TO USE TAB */}
+                        {activeTab === "howToUse" && (
+                            <motion.div key="howToUse"
+                                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
+                                className="max-w-2xl bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <Info size={20} className="text-emerald-600" />
+                                    {lang === "en" ? "How to Use" : "সেবনের নিয়ম"}
+                                </h3>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                                    {product.howToUse?.[lang === "en" ? "en" : "bn"]}
+                                </p>
                             </motion.div>
                         )}
 
