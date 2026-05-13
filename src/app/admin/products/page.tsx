@@ -27,7 +27,8 @@ export default function ManageProducts() {
         short_desc_en: "", short_desc_bn: "", desc_en: "", desc_bn: "",
         image: "", images: "", video_url: "",
         features_en: "", features_bn: "", specs: "",
-        how_to_use_en: "", how_to_use_bn: ""
+        how_to_use_en: "", how_to_use_bn: "",
+        storage_instructions_en: "", storage_instructions_bn: ""
     });
 
     useEffect(() => {
@@ -66,7 +67,8 @@ export default function ManageProducts() {
             short_desc_en: "", short_desc_bn: "", desc_en: "", desc_bn: "",
             image: "", images: "", video_url: "",
             features_en: "", features_bn: "", specs: "",
-            how_to_use_en: "", how_to_use_bn: ""
+            how_to_use_en: "", how_to_use_bn: "",
+            storage_instructions_en: "", storage_instructions_bn: ""
         });
         setError(null);
         setIsModalOpen(true);
@@ -84,7 +86,8 @@ export default function ManageProducts() {
             image: p.image || "", images: (p.images || []).join('\n'), video_url: p.video_url || "",
             features_en: (p.features_en || []).join('\n'), features_bn: (p.features_bn || []).join('\n'),
             specs: (p.specs || []).map((s: any) => `${s.label?.en || ''} | ${s.label?.bn || ''} | ${s.value || ''}`).join('\n'),
-            how_to_use_en: p.how_to_use_en || "", how_to_use_bn: p.how_to_use_bn || ""
+            how_to_use_en: p.how_to_use_en || "", how_to_use_bn: p.how_to_use_bn || "",
+            storage_instructions_en: p.storage_instructions_en || "", storage_instructions_bn: p.storage_instructions_bn || ""
         });
         setError(null);
         setIsModalOpen(true);
@@ -153,6 +156,7 @@ export default function ManageProducts() {
                 short_desc_en: formData.short_desc_en, short_desc_bn: formData.short_desc_bn,
                 desc_en: formData.desc_en, desc_bn: formData.desc_bn,
                 how_to_use_en: formData.how_to_use_en, how_to_use_bn: formData.how_to_use_bn,
+                storage_instructions_en: formData.storage_instructions_en, storage_instructions_bn: formData.storage_instructions_bn,
                 image: formData.image, video_url: formData.video_url || null,
                 images, features_en, features_bn, specs
             };
@@ -455,6 +459,14 @@ export default function ManageProducts() {
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">How to Use (Bengali)</label>
                                             <textarea name="how_to_use_bn" rows={4} value={formData.how_to_use_bn} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Storage Instructions (English)</label>
+                                            <textarea name="storage_instructions_en" rows={3} value={formData.storage_instructions_en} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Storage Instructions (Bengali)</label>
+                                            <textarea name="storage_instructions_bn" rows={3} value={formData.storage_instructions_bn} onChange={handleChange} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm"></textarea>
                                         </div>
                                     </div>
                                 </div>

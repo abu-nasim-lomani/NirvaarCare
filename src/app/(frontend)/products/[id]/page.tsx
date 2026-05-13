@@ -68,6 +68,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     features: data.features_en?.map((fen: string, i: number) => ({ en: fen, bn: data.features_bn?.[i] || fen })) || [],
                     specs: data.specs || [],
                     howToUse: { en: data.how_to_use_en || "Please refer to the manual for usage instructions.", bn: data.how_to_use_bn || "ব্যবহারের নিয়মের জন্য অনুগ্রহ করে ম্যানুয়ালটি দেখুন।" },
+                    storageInstructions: { en: data.storage_instructions_en || "", bn: data.storage_instructions_bn || "" },
                     tags: []
                 };
                 setProduct(mappedProduct);
@@ -101,6 +102,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         features: p.features_en?.map((fen: string, i: number) => ({ en: fen, bn: p.features_bn?.[i] || fen })) || [],
                         specs: p.specs || [],
                         howToUse: { en: p.how_to_use_en || "Please refer to the manual for usage instructions.", bn: p.how_to_use_bn || "ব্যবহারের নিয়মের জন্য অনুগ্রহ করে ম্যানুয়ালটি দেখুন।" },
+                        storageInstructions: { en: p.storage_instructions_en || "", bn: p.storage_instructions_bn || "" },
                         tags: []
                     })));
                 }
@@ -606,14 +608,29 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         {activeTab === "howToUse" && (
                             <motion.div key="howToUse"
                                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
-                                className="max-w-2xl bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                    <Info size={20} className="text-emerald-600" />
-                                    {lang === "en" ? "How to Use" : "সেবনের নিয়ম"}
-                                </h3>
-                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                                    {product.howToUse?.[lang === "en" ? "en" : "bn"]}
-                                </p>
+                                className="max-w-2xl space-y-6">
+                                
+                                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <Info size={20} className="text-emerald-600" />
+                                        {lang === "en" ? "How to Use" : "সেবনের নিয়ম"}
+                                    </h3>
+                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-wrap">
+                                        {product.howToUse?.[lang === "en" ? "en" : "bn"]}
+                                    </p>
+                                </div>
+
+                                {(product.storageInstructions?.en || product.storageInstructions?.bn) && (
+                                    <div className="bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl p-6 border border-blue-100 dark:border-blue-800/30">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                            <Package size={18} className="text-blue-500" />
+                                            {lang === "en" ? "Storage Instructions" : "সংরক্ষণ পদ্ধতি"}
+                                        </h3>
+                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-wrap">
+                                            {product.storageInstructions?.[lang === "en" ? "en" : "bn"]}
+                                        </p>
+                                    </div>
+                                )}
                             </motion.div>
                         )}
 
